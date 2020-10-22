@@ -1,8 +1,9 @@
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
+import numpy as np
 
 
-def render_land(l):
+def render_land(l: np.ndarray):
     fig4 = plt.figure()
     ax4 = fig4.add_subplot(122)
     ax4.imshow(l, interpolation='nearest', cmap=cm.Greys_r)
