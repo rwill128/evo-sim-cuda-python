@@ -6,7 +6,7 @@ def create_template(x=800, y=800) -> np.ndarray:
     return np.random.random(size=(x, y))
 
 
-def add_smoothing_to_land(l: np.ndarray):
+def add_smoothing_to_template(l: np.ndarray):
     sl = signal.savgol_filter(x=l, window_length=21, polyorder=4, axis=0)
     sl = signal.savgol_filter(x=sl, window_length=21, polyorder=4, axis=-1)
     return sl
@@ -24,7 +24,9 @@ def generate_land_and_water_from_template(l2: np.ndarray, t: float) -> (np.ndarr
 
 def entire_surface(l: np.ndarray, w: np.ndarray) -> np.ndarray:
     zeros = np.zeros(w.shape)
+    non_zero_locations_in_land = np.not_equal(l, zeros)
     non_zero_locations_in_water = np.not_equal(w, zeros)
-    ef = l.copy()
-    ef = np.copyto(ef, w, where=non_zero_locations_in_water)
+    ef = np.empty(l.shape)
+    np.copyto(ef, l, where=non_zero_locations_in_land)
+    np.copyto(ef, w, where=non_zero_locations_in_water)
     return ef
