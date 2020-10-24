@@ -1,9 +1,9 @@
-from typing import Any, Callable
+from typing import Callable
 
 import numpy as np
 
 
-def detect_occluded_squares(g, l: np.ndarray, cid):
+def detect_occluded_squares(g: np.ndarray, l: np.ndarray, cid: float):
     x0, y0, x1, y1 = l
 
     g[int(np.round(x0)), int(np.round(y0))] = cid
