@@ -68,6 +68,6 @@ def translate_creature_segs_to_world(c: np.ndarray):
         rot_x, rot_y = rotate_vector(line[1], line[2], theta)
         rot_x2, rot_y2 = rotate_vector(line[3], line[4], theta)
         line[1], line[2] = rot_x + x_translation, rot_y + y_translation
-        line[3], line[4] = rot_x2 + y_translation, rot_y2 + y_translation
+        line[3], line[4] = rot_x2 + x_translation, rot_y2 + y_translation
 
     return translated_c
