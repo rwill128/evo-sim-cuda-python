@@ -1,10 +1,8 @@
 import numpy as np
 
 
-def generate_random_simple_creature():
-
+def generate_random_simple_creature(num_segs=1):
     c_id = 1
-    num_segs = 1
 
     # Top row for info, other rows for segments
     sc = np.zeros(shape=(num_segs + 1, 5))
@@ -15,10 +13,11 @@ def generate_random_simple_creature():
     #    [ 0.,  0.,  0., -1.,  0.]]
 
     # Assign Id
-    sc[0,0] = c_id
+    sc[0, 0] = c_id
     sc[1] = [0.1, 0.0, 0.0, float(np.random.randint(-1, 1)), float(np.random.randint(-1, 1))]
-    # sc[2] = [0.1, sc[1,3], sc[1,4], sc[1,3] + float(np.random.randint(-1, 1)), sc[1,4] + float(np.random.randint(-1, 1))]
-    # sc[3] = [0.1, sc[2,3], sc[2,4], sc[2,3] + float(np.random.randint(-1, 1)), sc[2,4] + float(np.random.randint(-1, 1))]
-    # sc[3] = [0.1, sc[3,3], sc[3,4], sc[3,3] + float(np.random.randint(-1, 1)), sc[3,4] + float(np.random.randint(-1, 1))]
+    if num_segs > 1:
+        for i in range(2, num_segs + 1):
+            sc[i] = [0.1, sc[i - 1, 3], sc[i - 1, 4], sc[i - 1, 3] + float(np.random.randint(-1, 1)),
+                     sc[i - 1, 4] + float(np.random.randint(-1, 1))]
 
     return sc
