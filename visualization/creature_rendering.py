@@ -2,6 +2,8 @@ from typing import Callable
 
 import numpy as np
 
+from visualization import array_rendering as ar
+
 
 def detect_occluded_squares(g: np.ndarray, l: np.ndarray, cid: float):
     x0, y0, x1, y1 = l
@@ -71,3 +73,10 @@ def translate_creature_segs_to_world(c: np.ndarray):
         line[3], line[4] = rot_x2 + x_translation, rot_y2 + y_translation
 
     return translated_c
+
+
+def draw_creatures(creature_list):
+    for creature in creature_list:
+        translated_creature = cr.translate_creature_segs_to_world(creature)
+        cr.place_creature(empty_template, translated_creature)
+    ar.render_array(empty_template)

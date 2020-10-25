@@ -21,3 +21,17 @@ def generate_random_simple_creature(num_segs=1):
                      sc[i - 1, 4] + float(np.random.randint(-1, 1))]
 
     return sc
+
+
+def spawn_new_plants(num_plants: int = 1):
+
+    new_plants = []
+
+    for i in range(num_plants):
+        plant = sc.generate_random_simple_creature(1)
+        plant[0,1] = np.random.randint(2,world_size-2)
+        plant[0,2] = np.random.randint(2,world_size-2)
+        plant[0,3] = np.random.random_sample() * np.pi * 2
+        new_plants.append(plant)
+
+    return new_plants
