@@ -43,7 +43,7 @@ def detect_occluded_squares(g: np.ndarray, l: np.ndarray, cid: float):
         j += y_step_size
 
 
-def place_creature(t, c):
+def place_creature(c, t):
     c_id = c[0, 0]
     for l in c[1:]:
         segment_id = l[0]
@@ -60,7 +60,7 @@ def rotate_vector(x, y, t):
     return rotated_vector[0, 0], rotated_vector[1, 0]
 
 
-def translate_creature_segs_to_world(c: np.ndarray):
+def translate_creature_segs_to_world(c: np.ndarray) -> np.ndarray:
     translated_c = c.copy()
     x_translation = c[0, 1]
     y_translation = c[0, 2]
@@ -75,8 +75,7 @@ def translate_creature_segs_to_world(c: np.ndarray):
     return translated_c
 
 
-def draw_creatures(creature_list):
+def place_creatures(creature_list, world):
     for creature in creature_list:
-        translated_creature = cr.translate_creature_segs_to_world(creature)
-        cr.place_creature(empty_template, translated_creature)
-    ar.render_array(empty_template)
+        translated_creature = translate_creature_segs_to_world(creature)
+        place_creature(translated_creature, world)
