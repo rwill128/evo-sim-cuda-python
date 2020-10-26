@@ -34,4 +34,4 @@ def spawn_new_plants(world_params, num_plants: int = 1):
         plant[0, 2] = np.random.randint(2, world_params['world_size'] - 2)
         new_plants.append(plant)
 
-    return new_plants
+    world_params['plants'] = new_plants

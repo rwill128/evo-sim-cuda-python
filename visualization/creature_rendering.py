@@ -46,8 +46,7 @@ def detect_occluded_squares(world_params, l: np.ndarray, cid: float):
 def place_creature(c, world_params):
     c_id = c[0, 0]
     for l in c[1:]:
-        segment_id = l[0]
-        detect_occluded_squares(world_params, l[1:], c_id + segment_id)
+        detect_occluded_squares(world_params, l[1:], c_id)
 
 
 def rotate_vector(x, y, t):
@@ -75,7 +74,7 @@ def translate_creature_segs_to_world(c: np.ndarray) -> np.ndarray:
     return translated_c
 
 
-def place_creatures(creature_list, world_params):
-    for creature in creature_list:
+def place_creatures(world_params):
+    for creature in world_params['plants']:
         translated_creature = translate_creature_segs_to_world(creature)
         place_creature(translated_creature, world_params)
