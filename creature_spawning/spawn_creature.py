@@ -1,8 +1,10 @@
 import numpy as np
 
 
-def generate_random_simple_creature(num_segs, global_creature_id_counter):
-    c_id = ++global_creature_id_counter
+def generate_random_simple_creature(num_segs, world_params):
+    c_id = world_params['global_creature_id_counter']
+
+    world_params['global_creature_id_counter'] = world_params['global_creature_id_counter'] + 1
 
     # Top row for info, other rows for segments
     sc = np.zeros(shape=(num_segs + 1, 5))
@@ -23,13 +25,13 @@ def generate_random_simple_creature(num_segs, global_creature_id_counter):
     return sc
 
 
-def spawn_new_plants(world_size, num_plants: int = 1, global_creature_id_counter: int = 0):
+def spawn_new_plants(world_params, num_plants: int = 1):
     new_plants = []
 
     for i in range(num_plants):
-        plant = generate_random_simple_creature(1, global_creature_id_counter)
-        plant[0, 1] = np.random.randint(2, world_size - 2)
-        plant[0, 2] = np.random.randint(2, world_size - 2)
+        plant = generate_random_simple_creature(1, world_params)
+        plant[0, 1] = np.random.randint(2, world_params['world_size'] - 2)
+        plant[0, 2] = np.random.randint(2, world_params['world_size'] - 2)
         new_plants.append(plant)
 
     return new_plants

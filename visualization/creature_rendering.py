@@ -5,10 +5,10 @@ import numpy as np
 from visualization import array_rendering as ar
 
 
-def detect_occluded_squares(g: np.ndarray, l: np.ndarray, cid: float):
+def detect_occluded_squares(world_params, l: np.ndarray, cid: float):
     x0, y0, x1, y1 = l
 
-    g[int(np.round(x0)), int(np.round(y0))] = cid
+    world_params['world_array'][int(np.round(x0)), int(np.round(y0))] = cid
 
     slope = (y1 - y0) / (x1 - x0)
 
@@ -38,16 +38,16 @@ def detect_occluded_squares(g: np.ndarray, l: np.ndarray, cid: float):
 
     while (going_right and still_room_right(x0, x1, i) or (going_left and still_room_left(x0, x1, i))) \
             and (going_up and still_room_up(y0, y1, j) or (going_down and still_room_down(y0, y1, j))):
-        g[int(np.round(x0 + i)), int(np.round(y0 + j))] = cid
+        world_params['world_array'][int(np.round(x0 + i)), int(np.round(y0 + j))] = cid
         i += x_step_size
         j += y_step_size
 
 
-def place_creature(c, t):
+def place_creature(c, world_params):
     c_id = c[0, 0]
     for l in c[1:]:
         segment_id = l[0]
-        detect_occluded_squares(t, l[1:], c_id + segment_id)
+        detect_occluded_squares(world_params, l[1:], c_id + segment_id)
 
 
 def rotate_vector(x, y, t):
@@ -75,7 +75,7 @@ def translate_creature_segs_to_world(c: np.ndarray) -> np.ndarray:
     return translated_c
 
 
-def place_creatures(creature_list, world):
+def place_creatures(creature_list, world_params):
     for creature in creature_list:
         translated_creature = translate_creature_segs_to_world(creature)
-        place_creature(translated_creature, world)
+        place_creature(translated_creature, world_params)
