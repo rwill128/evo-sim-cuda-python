@@ -4,7 +4,8 @@ import numpy as np
 
 from visualization import array_rendering as ar
 
-
+# TODO: This can be made simpler for plants that are using only ints of length 1. It's just a grid, or it should be
+# Probably some or most of this code can be used for animals though.
 def detect_occluded_squares(world_params, l: np.ndarray, cid: float):
     x0, y0, x1, y1 = l
 
@@ -46,7 +47,8 @@ def detect_occluded_squares(world_params, l: np.ndarray, cid: float):
 def place_creature(c, world_params):
     c_id = c[0, 0]
     for l in c[1:]:
-        detect_occluded_squares(world_params, l[1:], c_id)
+        if l[0] > 0:
+            detect_occluded_squares(world_params, l[1:], c_id)
 
 
 def rotate_vector(x, y, t):
@@ -61,6 +63,8 @@ def translate_creature_segs_to_world(c: np.ndarray) -> np.ndarray:
     translated_c = c.copy()
     x_translation = c[0, 1]
     y_translation = c[0, 2]
+
+    # TODO: Theta and rotation calculations can be skipped for plants as they are currently implemented
     theta = c[0, 3]
 
     for line in translated_c[1:]:
