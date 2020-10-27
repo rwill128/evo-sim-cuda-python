@@ -4,7 +4,7 @@ import numpy as np
 def grow_plants(world_params):
     new_growth = []
     for index, plant in enumerate(world_params['plants']):
-        if plant[0][4] > 10:
+        if plant[0][4] > 5:
             plant[0][4] = 0
             joined_seg = plant[np.random.randint(1, len(plant))]
             new_seg = [0, joined_seg[3], joined_seg[4], joined_seg[3] + np.random.randint(-1, 1), joined_seg[4] + np.random.randint(-1, 1)]
