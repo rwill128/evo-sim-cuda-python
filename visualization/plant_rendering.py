@@ -50,8 +50,6 @@ def place_creature(c, world_params):
 
 
 def rotate_vector(x, y, t):
-    rot_mat = np.zeros(shape=(2, 2))
-    vector = np.zeros(shape=(1, 2))
     rot_mat = [[np.cos(t), -np.sin(t)],
                [np.sin(t), np.cos(t)]]
     vector = [[x], [y]]
@@ -74,7 +72,8 @@ def translate_creature_segs_to_world(c: np.ndarray) -> np.ndarray:
     return translated_c
 
 
-def place_creatures(world_params):
-    for creature in world_params['plants']:
-        translated_creature = translate_creature_segs_to_world(creature)
-        place_creature(translated_creature, world_params)
+# This could be heavily optimized for plants because the translations only need to be performed once, and can be stored.
+def place_plants(world_params):
+    for plant in world_params['plants']:
+        translated_plant = translate_creature_segs_to_world(plant)
+        place_creature(translated_plant, world_params)

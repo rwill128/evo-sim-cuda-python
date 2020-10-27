@@ -1,6 +1,6 @@
 import unittest
 import numpy as np
-import visualization.creature_rendering as cr
+import visualization.plant_rendering as cr
 
 
 class CreatureRenderingTest(unittest.TestCase):
