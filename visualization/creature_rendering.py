@@ -74,7 +74,7 @@ def translate_creature_segs_to_world(c: np.ndarray) -> np.ndarray:
     return translated_c
 
 
-def place_creatures(world_params):
+def bplace_creatures(world_params):
     for creature in world_params['plants']:
         translated_creature = translate_creature_segs_to_world(creature)
         place_creature(translated_creature, world_params)
