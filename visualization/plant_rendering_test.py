@@ -22,6 +22,11 @@ class CreatureRenderingTest(unittest.TestCase):
         self.assertEqual(int(new_x), -1)
         self.assertEqual(int(new_y), -5)
 
+    def test_detect_occluded_squares(self):
+        cid = 1
+        l = [0 , 1, 1, 2, 2]
+
+        detect_occluded_squares(world_params, l, cid)
 
 if __name__ == '__main__':
     unittest.main()

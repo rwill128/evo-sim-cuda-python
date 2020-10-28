@@ -2,20 +2,27 @@ from typing import Callable
 
 import numpy as np
 
-from visualization import array_rendering as ar
-
-
 # TODO: This can be made simpler for plants that are using only ints of length 1. It's just a grid, or it should be
 # Probably some or most of this code can be used for animals though.
+PLANT_SEGMENT_DEAD = 0
+
+
 def detect_occluded_squares(world_params, l: np.ndarray, cid: float):
     x0, y0, x1, y1 = l
 
     world_params['world_array'][int(np.round(x0)), int(np.round(y0))] = cid
 
-    slope = (y1 - y0) / (x1 - x0)
+    if x1 != x0:
+        slope = (y1 - y0) / (x1 - x0)
+        length_of_line = np.linalg.norm((y1 - y0, x1 - x0))
+    else:
+        slope = 1
+        length_of_line = y1 - y0
 
-    length_of_line = np.linalg.norm((y1 - y0, x1 - x0))
-    step_size = 1 / length_of_line
+    if length_of_line == 0:
+        step_size = 1
+    else:
+        step_size = 1 / length_of_line
 
     x_step_size = step_size
     y_step_size = step_size * slope
@@ -52,6 +59,12 @@ def place_creature(c, world_params):
             detect_occluded_squares(world_params, l[1:], c_id)
 
 
+def place_creature_dictionary_version(c_id, translated_segments, world_params):
+    for l in translated_segments:
+        if l[0] > PLANT_SEGMENT_DEAD:
+            detect_occluded_squares(world_params, l[1:], c_id)
+
+
 def rotate_vector(x, y, t):
     rot_mat = [[np.cos(t), -np.sin(t)],
                [np.sin(t), np.cos(t)]]
@@ -78,8 +91,27 @@ def translate_plant_segs_to_world(c: np.ndarray) -> np.ndarray:
     return translated_c
 
 
-# This could be heavily optimized for plants because the translations only need to be performed once, and can be stored.
+def translate_plant_segs_to_world_dictionary_version(c):
+    translated_segments = c['segments'].copy()
+    x_translation = c['x_translation']
+    y_translation = c['y_translation']
+
+    for line in translated_segments:
+        if line[0] != PLANT_SEGMENT_DEAD:
+            line[1], line[2] = line[1] + x_translation, line[2] + y_translation
+            line[3], line[4] = line[3] + x_translation, line[4] + y_translation
+
+    return translated_segments
+
+
 def place_plants(world_params):
     for plant in world_params['plants']:
         translated_plant = translate_plant_segs_to_world(plant)
         place_creature(translated_plant, world_params)
+
+
+# This could be heavily optimized for plants because the translations only need to be performed once, and can be stored.
+def place_plants_dictionary_version(world_params):
+    for plant in world_params['plants']:
+        translated_plant_segments = translate_plant_segs_to_world_dictionary_version(plant)
+        place_creature_dictionary_version(plant['c_id'], translated_plant_segments, world_params)
