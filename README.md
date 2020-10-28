@@ -14,3 +14,10 @@ Please inquire if you would like to contribute in any way.
 :segment maintenance cost implemented for plants
 :lifespan potentially?
 :at death, disappear or decompose?
+
+:seed cost gives the spawned plants more energy! 
+    :so essentially each seed gets donated a certain amount of energy from parent plant
+    :seed attraction factors could be subject to mutation
+:extra energy is funneled into growth until a certain age, then extra energy gets put into seeds/reproduction!
+    :this age is subject to mutation also
+:make creatures/plants into dictionaries that actually make sense. the segments can still be an np array for performance.
