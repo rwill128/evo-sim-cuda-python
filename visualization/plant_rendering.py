@@ -1,20 +1,24 @@
 from typing import Callable
 
 import numpy as np
+import numba as nb
 
 # TODO: This can be made simpler for plants that are using only ints of length 1. It's just a grid, or it should be
 # Probably some or most of this code can be used for animals though.
+from numba import prange
+
 PLANT_SEGMENT_DEAD = 0
 
 
-def detect_occluded_squares(world_params, l: np.ndarray, cid: float):
+@nb.jit(nopython=True)
+def detect_occluded_squares(world_array: np.array, l: np.array, cid: float):
     x0, y0, x1, y1 = l
 
-    world_params['world_array'][int(np.round(x0)), int(np.round(y0))] = cid
+    world_array[int(np.round(x0)), int(np.round(y0))] = cid
 
     if x1 != x0:
         slope = (y1 - y0) / (x1 - x0)
-        length_of_line = np.linalg.norm((y1 - y0, x1 - x0))
+        length_of_line = np.sqrt((y1 - y0) ** 2 + (x1 - x0) ** 2)
     else:
         slope = 1
         length_of_line = y1 - y0
@@ -47,15 +51,27 @@ def detect_occluded_squares(world_params, l: np.ndarray, cid: float):
 
     while (going_right and still_room_right(x0, x1, i) or (going_left and still_room_left(x0, x1, i))) \
             and (going_up and still_room_up(y0, y1, j) or (going_down and still_room_down(y0, y1, j))):
-        world_params['world_array'][int(np.round(x0 + i)), int(np.round(y0 + j))] = cid
+        world_array[int(np.round(x0 + i)), int(np.round(y0 + j))] = cid
         i += x_step_size
         j += y_step_size
 
 
-def place_creature(c_id, translated_segments, world_params):
+@nb.jit(nopython=True, parallel=True)
+def draw_plant_parallel(c_id: int, translated_segments: np.array, world_array: np.array):
+    l: np.array
+    n = translated_segments.shape[0]
+    for i in prange(n):
+        l = translated_segments[i]
+        if l[0] > PLANT_SEGMENT_DEAD:
+            detect_occluded_squares(world_array, l[1:], c_id)
+
+
+@nb.jit(nopython=True)
+def draw_plant(c_id: int, translated_segments: np.array, world_array: np.array):
+    l: np.array
     for l in translated_segments:
         if l[0] > PLANT_SEGMENT_DEAD:
-            detect_occluded_squares(world_params, l[1:], c_id)
+            detect_occluded_squares(world_array, l[1:], c_id)
 
 
 def rotate_vector(x, y, t):
@@ -84,10 +100,9 @@ def translate_creature_segs_to_world(c: np.ndarray) -> np.ndarray:
     return translated_c
 
 
-def translate_plant_segs_to_world(c):
-    translated_segments = c['segments'].copy()
-    x_translation = c['x_translation']
-    y_translation = c['y_translation']
+@nb.jit(nopython=True)
+def translate_plant_segs_to_world(segments: np.array, x_translation: int, y_translation: int):
+    translated_segments = segments.copy()
 
     for line in translated_segments:
         if line[0] != PLANT_SEGMENT_DEAD:
@@ -100,5 +115,9 @@ def translate_plant_segs_to_world(c):
 # This could be heavily optimized for plants because the translations only need to be performed once, and can be stored.
 def place_plants(world_params):
     for plant in world_params['plants']:
-        translated_plant_segments = translate_plant_segs_to_world(plant)
-        place_creature(plant['c_id'], translated_plant_segments, world_params)
+        translated_plant_segments = translate_plant_segs_to_world(
+            plant['segments'],
+            plant['x_translation'],
+            plant['y_translation'])
+
+        draw_plant(plant['c_id'], translated_plant_segments, world_params['world_array'])
