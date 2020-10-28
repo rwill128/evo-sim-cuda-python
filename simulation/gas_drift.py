@@ -2,7 +2,7 @@ import numpy as np
 import numba as nb
 
 
-@nb.jit(nopython=True)
+@nb.jit(nopython=True, fastmath=True)
 def move_gases(gas_map: np.array, world_size: int):
 
     gas_filled_squares = np.nonzero(gas_map)

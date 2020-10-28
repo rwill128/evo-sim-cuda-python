@@ -10,7 +10,7 @@ from numba import prange
 PLANT_SEGMENT_DEAD = 0
 
 
-@nb.jit(nopython=True)
+@nb.jit(nopython=True, fastmath=True)
 def detect_occluded_squares(world_array: np.array, l: np.array, cid: float):
     x0, y0, x1, y1 = l
 
@@ -56,6 +56,48 @@ def detect_occluded_squares(world_array: np.array, l: np.array, cid: float):
         j += y_step_size
 
 
+
+
+@nb.jit(nopython=True, fastmath=True)
+def draw_plant(c_id: int, translated_segments: np.array, world_array: np.array):
+    l: np.array
+    for l in translated_segments:
+        if l[0] > PLANT_SEGMENT_DEAD:
+            detect_occluded_squares(world_array, l[1:], c_id)
+
+
+@nb.jit(nopython=True, fastmath=True)
+def translate_plant_segs_to_world(segments: np.array, x_translation: int, y_translation: int):
+    translated_segments = segments.copy()
+
+    for line in translated_segments:
+        if line[0] != PLANT_SEGMENT_DEAD:
+            line[1], line[2] = line[1] + x_translation, line[2] + y_translation
+            line[3], line[4] = line[3] + x_translation, line[4] + y_translation
+
+    return translated_segments
+
+
+# This could be heavily optimized for plants because the translations only need to be performed once, and can be stored.
+def place_plants(plants, world_array: np.array):
+    for plant in plants:
+        translated_plant_segments = translate_plant_segs_to_world(
+            plant['segments'],
+            plant['x_translation'],
+            plant['y_translation'])
+
+        draw_plant(plant['c_id'], translated_plant_segments, world_array)
+
+
+# def place_plants(world_params):
+#     for plant in world_params['plants']:
+#         translated_plant_segments = translate_plant_segs_to_world(
+#             plant['segments'],
+#             plant['x_translation'],
+#             plant['y_translation'])
+#
+#         draw_plant(plant['c_id'], translated_plant_segments, world_params['world_array'])
+
 @nb.jit(nopython=True, parallel=True)
 def draw_plant_parallel(c_id: int, translated_segments: np.array, world_array: np.array):
     l: np.array
@@ -64,15 +106,6 @@ def draw_plant_parallel(c_id: int, translated_segments: np.array, world_array: n
         l = translated_segments[i]
         if l[0] > PLANT_SEGMENT_DEAD:
             detect_occluded_squares(world_array, l[1:], c_id)
-
-
-@nb.jit(nopython=True)
-def draw_plant(c_id: int, translated_segments: np.array, world_array: np.array):
-    l: np.array
-    for l in translated_segments:
-        if l[0] > PLANT_SEGMENT_DEAD:
-            detect_occluded_squares(world_array, l[1:], c_id)
-
 
 def rotate_vector(x, y, t):
     rot_mat = [[np.cos(t), -np.sin(t)],
@@ -98,35 +131,3 @@ def translate_creature_segs_to_world(c: np.ndarray) -> np.ndarray:
             line[3], line[4] = line[3] + x_translation, line[4] + y_translation
 
     return translated_c
-
-
-@nb.jit(nopython=True)
-def translate_plant_segs_to_world(segments: np.array, x_translation: int, y_translation: int):
-    translated_segments = segments.copy()
-
-    for line in translated_segments:
-        if line[0] != PLANT_SEGMENT_DEAD:
-            line[1], line[2] = line[1] + x_translation, line[2] + y_translation
-            line[3], line[4] = line[3] + x_translation, line[4] + y_translation
-
-    return translated_segments
-
-
-# This could be heavily optimized for plants because the translations only need to be performed once, and can be stored.
-def place_plants(plants, world_array: np.array):
-    for plant in plants:
-        translated_plant_segments = translate_plant_segs_to_world(
-            plant['segments'],
-            plant['x_translation'],
-            plant['y_translation'])
-
-        draw_plant(plant['c_id'], translated_plant_segments, world_array)
-
-# def place_plants(world_params):
-#     for plant in world_params['plants']:
-#         translated_plant_segments = translate_plant_segs_to_world(
-#             plant['segments'],
-#             plant['x_translation'],
-#             plant['y_translation'])
-#
-#         draw_plant(plant['c_id'], translated_plant_segments, world_params['world_array'])
