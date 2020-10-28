@@ -2,7 +2,7 @@ import numpy as np
 
 ALIVE_SEGMENT = 1
 
-STARTING_PLANT_ENERGY = 100
+STARTING_PLANT_ENERGY = 1000
 
 
 def generate_random_simple_creature(num_segs, world_params):
