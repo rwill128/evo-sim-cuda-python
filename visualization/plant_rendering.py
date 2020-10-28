@@ -52,14 +52,7 @@ def detect_occluded_squares(world_params, l: np.ndarray, cid: float):
         j += y_step_size
 
 
-def place_creature(c, world_params):
-    c_id = c[0, 0]
-    for l in c[1:]:
-        if l[0] > 0:
-            detect_occluded_squares(world_params, l[1:], c_id)
-
-
-def place_creature_dictionary_version(c_id, translated_segments, world_params):
+def place_creature(c_id, translated_segments, world_params):
     for l in translated_segments:
         if l[0] > PLANT_SEGMENT_DEAD:
             detect_occluded_squares(world_params, l[1:], c_id)
@@ -73,7 +66,7 @@ def rotate_vector(x, y, t):
     return rotated_vector[0, 0], rotated_vector[1, 0]
 
 
-def translate_plant_segs_to_world(c: np.ndarray) -> np.ndarray:
+def translate_creature_segs_to_world(c: np.ndarray) -> np.ndarray:
     translated_c = c.copy()
     x_translation = c[0, 1]
     y_translation = c[0, 2]
@@ -91,7 +84,7 @@ def translate_plant_segs_to_world(c: np.ndarray) -> np.ndarray:
     return translated_c
 
 
-def translate_plant_segs_to_world_dictionary_version(c):
+def translate_plant_segs_to_world(c):
     translated_segments = c['segments'].copy()
     x_translation = c['x_translation']
     y_translation = c['y_translation']
@@ -104,14 +97,8 @@ def translate_plant_segs_to_world_dictionary_version(c):
     return translated_segments
 
 
+# This could be heavily optimized for plants because the translations only need to be performed once, and can be stored.
 def place_plants(world_params):
     for plant in world_params['plants']:
-        translated_plant = translate_plant_segs_to_world(plant)
-        place_creature(translated_plant, world_params)
-
-
-# This could be heavily optimized for plants because the translations only need to be performed once, and can be stored.
-def place_plants_dictionary_version(world_params):
-    for plant in world_params['plants']:
-        translated_plant_segments = translate_plant_segs_to_world_dictionary_version(plant)
-        place_creature_dictionary_version(plant['c_id'], translated_plant_segments, world_params)
+        translated_plant_segments = translate_plant_segs_to_world(plant)
+        place_creature(plant['c_id'], translated_plant_segments, world_params)
