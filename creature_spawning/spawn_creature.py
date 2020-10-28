@@ -1,5 +1,7 @@
 import numpy as np
 
+STARTING_PLANT_ENERGY = 100
+
 
 def generate_random_simple_creature(num_segs, world_params):
     c_id = world_params['global_creature_id_counter']
@@ -19,7 +21,7 @@ def generate_random_simple_creature(num_segs, world_params):
     sc[0, 0] = c_id
     sc[0, 1] = np.random.randint(2, world_params['world_size'] - 2)
     sc[0, 2] = np.random.randint(2, world_params['world_size'] - 2)
-    sc[0, 4] = 10
+    sc[0, 4] = STARTING_PLANT_ENERGY
     sc[1] = [1, 0, 0, np.random.randint(-1, 1), np.random.randint(-1, 1)]
     if num_segs > 1:
         for i in range(2, num_segs + 1):

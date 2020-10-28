@@ -1,11 +1,18 @@
 import numpy as np
 
+ENERGY_COST_FOR_PLANTS_PER_FRAME = 1
+
+ENERGY_GAINED_FROM_ONE_CARBON_DIOXIDE = 100
+
+ENERGY_AFTER_ADDING_BRANCH = 4000
+ENERGY_NEEDED_TO_ADD_BRANCH = 5000
+
 
 def grow_plants(world_params):
 
     for index, plant in enumerate(world_params['plants']):
         if plant[0][4] > 0:
-            plant[0][4] -= 1
+            plant[0][4] -= ENERGY_COST_FOR_PLANTS_PER_FRAME
         if plant[0][4] == 0:
             if len(plant) == 2:
                 # Mark only segment dead
@@ -17,8 +24,8 @@ def grow_plants(world_params):
     new_growth = []
 
     for index, plant in enumerate(world_params['plants']):
-        if plant[0][4] > 20:
-            plant[0][4] = 10
+        if plant[0][4] > ENERGY_NEEDED_TO_ADD_BRANCH:
+            plant[0][4] = ENERGY_AFTER_ADDING_BRANCH
             joined_seg = plant[np.random.randint(1, len(plant))] # TODO: Should only grow off of live segments
             new_seg = [1, joined_seg[3], joined_seg[4], joined_seg[3] + np.random.randint(-1, 1), joined_seg[4] + np.random.randint(-1, 1)]
             new_growth.append((index, np.append(plant, [new_seg], 0)))
@@ -33,4 +40,4 @@ def photosynthesize(world_params):
         y = occupied_squares[1][index]
         if world_params['carbon_dioxide_map'][x][y] > 0:
             world_params['carbon_dioxide_map'][x][y] -= 1
-            world_params['plants'][int(np.round(world_params['world_array'][x][y])) - 1][0][4] += 10
+            world_params['plants'][int(np.round(world_params['world_array'][x][y])) - 1][0][4] += ENERGY_GAINED_FROM_ONE_CARBON_DIOXIDE

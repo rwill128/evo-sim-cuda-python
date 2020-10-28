@@ -4,6 +4,7 @@ import numpy as np
 
 from visualization import array_rendering as ar
 
+
 # TODO: This can be made simpler for plants that are using only ints of length 1. It's just a grid, or it should be
 # Probably some or most of this code can be used for animals though.
 def detect_occluded_squares(world_params, l: np.ndarray, cid: float):
@@ -59,19 +60,20 @@ def rotate_vector(x, y, t):
     return rotated_vector[0, 0], rotated_vector[1, 0]
 
 
-def translate_creature_segs_to_world(c: np.ndarray) -> np.ndarray:
+def translate_plant_segs_to_world(c: np.ndarray) -> np.ndarray:
     translated_c = c.copy()
     x_translation = c[0, 1]
     y_translation = c[0, 2]
 
     # TODO: Theta and rotation calculations can be skipped for plants as they are currently implemented
-    theta = c[0, 3]
+    # theta = c[0, 3]
 
     for line in translated_c[1:]:
-        rot_x, rot_y = rotate_vector(line[1], line[2], theta)
-        rot_x2, rot_y2 = rotate_vector(line[3], line[4], theta)
-        line[1], line[2] = rot_x + x_translation, rot_y + y_translation
-        line[3], line[4] = rot_x2 + x_translation, rot_y2 + y_translation
+        if line[0] > 0:
+            # rot_x, rot_y = rotate_vector(line[1], line[2], theta)
+            # rot_x2, rot_y2 = rotate_vector(line[3], line[4], theta)
+            line[1], line[2] = line[1] + x_translation, line[2] + y_translation
+            line[3], line[4] = line[3] + x_translation, line[4] + y_translation
 
     return translated_c
 
@@ -79,5 +81,5 @@ def translate_creature_segs_to_world(c: np.ndarray) -> np.ndarray:
 # This could be heavily optimized for plants because the translations only need to be performed once, and can be stored.
 def place_plants(world_params):
     for plant in world_params['plants']:
-        translated_plant = translate_creature_segs_to_world(plant)
+        translated_plant = translate_plant_segs_to_world(plant)
         place_creature(translated_plant, world_params)
