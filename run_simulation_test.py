@@ -18,9 +18,8 @@ class RunSimulationTest(unittest.TestCase):
                                                      fill_value=0)
         sc.spawn_new_plants(world_params=world_params,
                             num_plants=100)
-        pr.place_plants(world_params)
 
-        rs.run_sim_for_x_steps(world_params, 1000)
+        rs.run_sim_for_x_steps(world_params, 5000)
 
         ar.render_array(world_params['world_array'], 'Plants')
         ar.render_array(world_params['carbon_dioxide_map'], 'Carbon Dioxide')

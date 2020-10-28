@@ -113,11 +113,20 @@ def translate_plant_segs_to_world(segments: np.array, x_translation: int, y_tran
 
 
 # This could be heavily optimized for plants because the translations only need to be performed once, and can be stored.
-def place_plants(world_params):
-    for plant in world_params['plants']:
+def place_plants(plants, world_array: np.array):
+    for plant in plants:
         translated_plant_segments = translate_plant_segs_to_world(
             plant['segments'],
             plant['x_translation'],
             plant['y_translation'])
 
-        draw_plant(plant['c_id'], translated_plant_segments, world_params['world_array'])
+        draw_plant(plant['c_id'], translated_plant_segments, world_array)
+
+# def place_plants(world_params):
+#     for plant in world_params['plants']:
+#         translated_plant_segments = translate_plant_segs_to_world(
+#             plant['segments'],
+#             plant['x_translation'],
+#             plant['y_translation'])
+#
+#         draw_plant(plant['c_id'], translated_plant_segments, world_params['world_array'])
