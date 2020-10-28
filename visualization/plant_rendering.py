@@ -11,10 +11,10 @@ PLANT_SEGMENT_DEAD = 0
 
 
 @nb.jit(nopython=True, fastmath=True)
-def detect_occluded_squares(world_array: np.array, l: np.array, cid: float):
-    x0, y0, x1, y1 = l
+def detect_occluded_squares(world_array: np.array, segment):
+    x0, y0, x1, y1 = (segment[4], segment[5], segment[6], segment[7])
 
-    world_array[int(np.round(x0)), int(np.round(y0))] = cid
+    world_array[int(np.round(x0)), int(np.round(y0))] = segment[0]
 
     if x1 != x0:
         slope = (y1 - y0) / (x1 - x0)
@@ -51,42 +51,63 @@ def detect_occluded_squares(world_array: np.array, l: np.array, cid: float):
 
     while (going_right and still_room_right(x0, x1, i) or (going_left and still_room_left(x0, x1, i))) \
             and (going_up and still_room_up(y0, y1, j) or (going_down and still_room_down(y0, y1, j))):
-        world_array[int(np.round(x0 + i)), int(np.round(y0 + j))] = cid
+        world_array[int(np.round(x0 + i)), int(np.round(y0 + j))] = segment[0]
         i += x_step_size
         j += y_step_size
 
 
+@nb.jit(nopython=True, fastmath=True)
+def draw_plant(translated_segment: np.array, world_array: np.array):
+    if translated_segment[3] > PLANT_SEGMENT_DEAD:
+        detect_occluded_squares(world_array, translated_segment)
 
 
 @nb.jit(nopython=True, fastmath=True)
-def draw_plant(c_id: int, translated_segments: np.array, world_array: np.array):
-    l: np.array
-    for l in translated_segments:
-        if l[0] > PLANT_SEGMENT_DEAD:
-            detect_occluded_squares(world_array, l[1:], c_id)
+def translate_plant_segs_to_world(segment: np.array):
+    line = segment.copy()
+    x_translation = line[1]
+    y_translation =  line[2]
+    line[4], line[5] = line[4] + x_translation, line[5] + y_translation
+    line[6], line[7] = line[6] + x_translation, line[7] + y_translation
 
-
-@nb.jit(nopython=True, fastmath=True)
-def translate_plant_segs_to_world(segments: np.array, x_translation: int, y_translation: int):
-    translated_segments = segments.copy()
-
-    for line in translated_segments:
-        if line[0] != PLANT_SEGMENT_DEAD:
-            line[1], line[2] = line[1] + x_translation, line[2] + y_translation
-            line[3], line[4] = line[3] + x_translation, line[4] + y_translation
-
-    return translated_segments
+    return line
 
 
 # This could be heavily optimized for plants because the translations only need to be performed once, and can be stored.
 def place_plants(plants, world_array: np.array):
-    for plant in plants:
-        translated_plant_segments = translate_plant_segs_to_world(
-            plant['segments'],
-            plant['x_translation'],
-            plant['y_translation'])
+    array_of_segment_numpy_arrays = np.array([[0, 0, 0, 0, 0, 0, 0, 0]])
+    first_value_set = False
 
-        draw_plant(plant['c_id'], translated_plant_segments, world_array)
+    for plant in plants:
+        for segment in plant['segments']:
+            segment_numpy_arry = np.array(
+                [plant['c_id'], plant['x_translation'], plant['y_translation'], segment[0], segment[1], segment[2],
+                 segment[3], segment[4]])
+
+        if not first_value_set:
+            array_of_segment_numpy_arrays[0] = segment_numpy_arry
+            first_value_set = True
+        else:
+            array_of_segment_numpy_arrays = np.append(array_of_segment_numpy_arrays, [segment_numpy_arry], 0)
+
+    place_plants_numpy_array_version(array_of_segment_numpy_arrays, world_array)
+
+    #
+    # for plant in plants:
+    #     translated_plant_segments = translate_plant_segs_to_world(
+    #         plant['segments'],
+    #         plant['x_translation'],
+    #         plant['y_translation'])
+    #
+    #     draw_plant(plant['c_id'], translated_plant_segments, world_array)
+
+
+@nb.jit(nopython=True, parallel=True)
+def place_plants_numpy_array_version(segments: np.array, world_array: np.array):
+    for n in prange(len(segments)):
+        segment = segments[n]
+        translated_plant_segments = translate_plant_segs_to_world(segment)
+        draw_plant(translated_plant_segments, world_array)
 
 
 # def place_plants(world_params):
@@ -106,6 +127,7 @@ def draw_plant_parallel(c_id: int, translated_segments: np.array, world_array: n
         l = translated_segments[i]
         if l[0] > PLANT_SEGMENT_DEAD:
             detect_occluded_squares(world_array, l[1:], c_id)
+
 
 def rotate_vector(x, y, t):
     rot_mat = [[np.cos(t), -np.sin(t)],
