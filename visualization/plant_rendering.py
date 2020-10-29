@@ -10,7 +10,7 @@ from numba import prange
 PLANT_SEGMENT_DEAD = 0
 
 
-@nb.jit(nopython=True)
+@nb.jit(nopython=True, fastmath=True)
 def detect_occluded_squares(world_array: np.array, l: np.array, cid: float):
     x0, y0, x1, y1 = l
 
@@ -56,7 +56,7 @@ def detect_occluded_squares(world_array: np.array, l: np.array, cid: float):
         j += y_step_size
 
 
-@nb.jit(nopython=True, parallel=True)
+@nb.jit(nopython=True, fastmath=True)
 def draw_plant_parallel(c_id: int, translated_segments: np.array, world_array: np.array):
     l: np.array
     n = translated_segments.shape[0]
@@ -66,7 +66,7 @@ def draw_plant_parallel(c_id: int, translated_segments: np.array, world_array: n
             detect_occluded_squares(world_array, l[1:], c_id)
 
 
-@nb.jit(nopython=True)
+@nb.jit(nopython=True, fastmath=True)
 def draw_plant(c_id: int, translated_segments: np.array, world_array: np.array):
     l: np.array
     for l in translated_segments:
@@ -100,7 +100,7 @@ def translate_creature_segs_to_world(c: np.ndarray) -> np.ndarray:
     return translated_c
 
 
-@nb.jit(nopython=True)
+@nb.jit(nopython=True, fastmath=True)
 def translate_plant_segs_to_world(segments: np.array, x_translation: int, y_translation: int):
     translated_segments = segments.copy()
 

@@ -3,8 +3,6 @@ import numpy as np
 import creature_spawning.spawn_creature as sc
 import visualization.plant_rendering as pr
 import visualization.array_rendering as ar
-import simulation.gas_drift as gd
-import simulation.plant_simulation as ps
 import run_simulation as rs
 
 
