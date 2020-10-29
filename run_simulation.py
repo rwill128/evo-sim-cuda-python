@@ -18,3 +18,6 @@ def run_sim_for_x_steps(world, steps):
         ps.photosynthesize(world)
         gd.move_gases(world['carbon_dioxide_map'], world['world_size'])
         ps.grow_plants(world)
+
+    world['world_array'] = np.zeros(shape=(world['world_size'], world['world_size']), dtype=int)
+    pr.place_plants(world['plants'], world['world_array'])

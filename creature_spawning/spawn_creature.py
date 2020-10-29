@@ -29,6 +29,7 @@ def generate_random_simple_creature(num_segs, world_params):
 
     return creature
 
+
 def spawn_new_plants(world_params, num_plants: int = 1):
     new_plants = []
 
