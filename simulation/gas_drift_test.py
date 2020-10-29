@@ -14,7 +14,7 @@ class GasDriftTest(unittest.TestCase):
         }
         world_params['carbon_dioxide_map'] = np.full(shape=(world_params['world_size'], world_params['world_size']),
                                                      fill_value=0)
-        for i in range(50):
+        for i in range(500):
             world_params['carbon_dioxide_map'][int(world_params['world_size'] * .25)][
                 int(world_params['world_size'] * .25)] += 1
             world_params['carbon_dioxide_map'][int(world_params['world_size'] * .25)][
@@ -44,7 +44,7 @@ class GasDriftTest(unittest.TestCase):
                                                                dtype=int)
         carbon_additions_each_frame_sparse_matrix: csc_matrix = sparse.csc_matrix(carbon_additions_each_frame)
 
-        for i in range(50):
+        for i in range(500):
             world_params['carbon_dioxide_map'] = world_params['carbon_dioxide_map'] + carbon_additions_each_frame_sparse_matrix
 
             world_params['carbon_dioxide_map'] = gd.move_gases_scipy_sparse_matrix(world_params['carbon_dioxide_map'], world_params['world_size'])
