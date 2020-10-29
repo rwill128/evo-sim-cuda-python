@@ -1,14 +1,13 @@
 import unittest
 import numpy as np
 import creature_spawning.spawn_creature as sc
-import visualization.plant_rendering as pr
 import visualization.array_rendering as ar
 import run_simulation as rs
 
 
 class RunSimulationTest(unittest.TestCase):
     def test_run_simulation(self):
-        world_params = {'world_size': 200,
+        world_params = {'world_size': 1000,
                         'global_creature_id_counter': int(1)}
         world_params['world_array'] = np.zeros(shape=(world_params['world_size'], world_params['world_size']),
                                                dtype=int)

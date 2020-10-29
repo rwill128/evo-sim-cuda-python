@@ -20,4 +20,4 @@ def run_sim_for_x_steps(world, steps):
         ps.grow_plants(world)
 
     world['world_array'] = np.zeros(shape=(world['world_size'], world['world_size']), dtype=int)
-    pr.place_plants(world['plants'], world['world_array'])
+    pr.place_plants(world)
