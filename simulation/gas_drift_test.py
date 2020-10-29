@@ -14,7 +14,7 @@ class GasDriftTest(unittest.TestCase):
         }
         world_params['carbon_dioxide_map'] = np.full(shape=(world_params['world_size'], world_params['world_size']),
                                                      fill_value=0)
-        for i in range(1000):
+        for i in range(50):
             world_params['carbon_dioxide_map'][int(world_params['world_size'] * .25)][
                 int(world_params['world_size'] * .25)] += 1
             world_params['carbon_dioxide_map'][int(world_params['world_size'] * .25)][

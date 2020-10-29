@@ -47,7 +47,7 @@ def move_gases_scipy_sparse_matrix(gas_map: sparse.csc_matrix, world_size: int):
     return gas_map + modifications_matrix
 
 
-# @nb.jit(nopython=True, fastmath=True)
+@nb.jit(nopython=True, fastmath=True)
 def numba_move_gases(x_squares: np.array, y_squares: np.array, gas_values: np.array, row_test: np.array,
                      col_test: np.array, data_test: np.array, world_size: int):
     for parallel_index in range(len(x_squares)):
@@ -59,11 +59,7 @@ def numba_move_gases(x_squares: np.array, y_squares: np.array, gas_values: np.ar
         col_test = np.append(col_test, y)
         data_test = np.append(data_test, -1)
 
-        up = np.array([x, y + 1])
-        down = np.array([x, y - 1])
-        left = np.array([x - 1, y])
-        right = np.array([x + 1, y])
-        choice_mask = np.array([up, down, right, left])
+        choice_mask = np.array([[x, y + 1], [x, y - 1], [x - 1, y], [x + 1, y]])
         choices = np.random.choice(np.array([0, 1, 2, 3]), 4)
 
         for choice in choices:
