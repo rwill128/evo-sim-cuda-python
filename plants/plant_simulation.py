@@ -1,5 +1,6 @@
 import numpy as np
 
+from plants.plant_creation import generate_random_seedling
 from plants.plant_rendering import PLANT_SEGMENT_DEAD
 
 ENERGY_COST_FOR_PLANTS_PER_FRAME = 1
@@ -7,6 +8,7 @@ ENERGY_COST_FOR_PLANTS_PER_FRAME = 1
 ENERGY_GAINED_FROM_ONE_CARBON_DIOXIDE = 100
 
 ENERGY_AFTER_ADDING_BRANCH = 4000
+ENERGY_AFTER_REPRODUCING = 4000
 ENERGY_NEEDED_TO_ADD_BRANCH = 5000
 
 
@@ -28,7 +30,8 @@ def grow_plants(world_params):
     for index, plant in enumerate(world_params['plants']):
         if plant['energy'] > ENERGY_NEEDED_TO_ADD_BRANCH:
             if plant['age'] > plant['fertile_age']:
-                pass
+                plant['energy'] = ENERGY_AFTER_REPRODUCING
+                world_params['plants'].append(generate_random_seedling(1, world_params))
             else:
                 plant['energy'] = ENERGY_AFTER_ADDING_BRANCH
                 joined_seg = plant['segments'][
