@@ -2,7 +2,7 @@ import numpy as np
 
 ALIVE_SEGMENT = 1
 
-STARTING_PLANT_ENERGY = 1000
+STARTING_PLANT_ENERGY = 90
 
 
 def generate_random_seedling(num_segs: int, world_params, vicinity: (int, int) = None):
@@ -28,7 +28,8 @@ def generate_random_seedling(num_segs: int, world_params, vicinity: (int, int) =
         'energy': STARTING_PLANT_ENERGY,
         'segments': np.array([[1, 0, 0, np.random.randint(-1, 1), np.random.randint(-1, 1)]]),
         'age': 0,
-        'fertile_age': 1000
+        'fertile_age': 1000,
+        'alive': True
     }
 
     world_params['global_creature_id_counter'] = world_params['global_creature_id_counter'] + 1
@@ -55,3 +56,4 @@ def spawn_new_plants(world_params, num_plants: int = 1):
         new_plants.append(plant)
 
     world_params['plants'] = new_plants
+    world_params['dead_plants'] = []

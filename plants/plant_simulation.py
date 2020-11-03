@@ -13,17 +13,31 @@ ENERGY_NEEDED_TO_ADD_BRANCH = 5000
 
 
 def grow_plants(world_params):
+    dead_plants = []
+
     for index, plant in enumerate(world_params['plants']):
         plant['age'] += 1
         if plant['energy'] > 0:
             plant['energy'] -= ENERGY_COST_FOR_PLANTS_PER_FRAME
+
         if plant['energy'] == 0:
+
             if len(plant['segments']) == 1:
                 # Mark only segment dead
                 plant['segments'][0][0] = PLANT_SEGMENT_DEAD
             else:
                 # Mark random segment dead
                 plant['segments'][np.random.randint(0, len(plant['segments']) - 1)][0] = PLANT_SEGMENT_DEAD
+
+        if np.count_nonzero(plant['segments'][0][:]) == 0:
+            dead_plants.append(plant)
+        else:
+            pass
+
+    for dead_plant in dead_plants:
+        world_params['plants'].remove(dead_plant)
+        dead_plant['alive'] = False
+        world_params['dead_plants'].append(dead_plant)
 
     new_growth = []
 
@@ -45,7 +59,8 @@ def grow_plants(world_params):
                 new_growth.append((index, new_seg))
 
     for index, new_segment in new_growth:
-        world_params['plants'][index]['segments'] = np.append(world_params['plants'][index]['segments'], [new_segment], 0)
+        world_params['plants'][index]['segments'] = np.append(world_params['plants'][index]['segments'], [new_segment],
+                                                              0)
 
 
 def photosynthesize(world_params):
