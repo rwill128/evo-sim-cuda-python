@@ -10,78 +10,21 @@ from numba import prange
 PLANT_SEGMENT_DEAD = 0
 
 
-@nb.jit(nopython=True, fastmath=True)
-def detect_occluded_squares(world_array: np.array, l: np.array, cid: float):
+@nb.jit(nopython=True)
+def detect_occluded_squares(world_array: np.array, l: np.array, x_translation: int, y_translation: int, cid: int):
     x0, y0, x1, y1 = l
+    world_array[x0 + x_translation, y0 + y_translation] = cid
+    world_array[x1 + x_translation, y1 + y_translation] = cid
 
-    world_array[x0, y0] = cid
-
-    if x1 != x0:
-        slope = (y1 - y0) / (x1 - x0)
-        length_of_line = np.sqrt((y1 - y0) ** 2 + (x1 - x0) ** 2)
-    else:
-        slope = 1
-        length_of_line = y1 - y0
-
-    if length_of_line == 0:
-        step_size = 1
-    else:
-        step_size = 1 / length_of_line
-
-    x_step_size = step_size
-    y_step_size = step_size * slope
-
-    i, j = x_step_size, y_step_size
-
-    going_right = x0 < x1
-    going_left = x0 > x1
-    going_up = y0 < y1
-    going_down = y0 > y1
-
-    if going_left:
-        i = -i
-        x_step_size = -x_step_size
-        j = -j
-        y_step_size = -y_step_size
-
-    still_room_right: Callable[[float, float, float], bool] = lambda x, x2, inc: (x + inc <= x2)
-    still_room_left: Callable[[float, float, float], bool] = lambda x, x2, inc: (x + inc >= x2)
-    still_room_up: Callable[[float, float, float], bool] = lambda y, y2, inc: (y + inc <= y2)
-    still_room_down: Callable[[float, float, float], bool] = lambda y, y2, inc: (y + inc >= y2)
-
-    while (going_right and still_room_right(x0, x1, i) or (going_left and still_room_left(x0, x1, i))) \
-            and (going_up and still_room_up(y0, y1, j) or (going_down and still_room_down(y0, y1, j))):
-        world_array[int(np.round(x0 + i)), int(np.round(y0 + j))] = cid
-        i += x_step_size
-        j += y_step_size
-
-
-@nb.jit(nopython=True, fastmath=True)
-def draw_plant(c_id: int, translated_segments: np.array, world_array: np.array):
-    l: np.array
-    for l in translated_segments:
+@nb.jit(nopython=True)
+def draw_plant(c_id: int, segments: np.array, x_translation: int, y_translation: int, world_array: np.array):
+    for l in segments:
         if l[0] > PLANT_SEGMENT_DEAD:
-            detect_occluded_squares(world_array, l[1:], c_id)
-
-
-@nb.jit(nopython=True, fastmath=True)
-def translate_plant_segs_to_world(segments: np.array, x_translation: int, y_translation: int):
-    translated_segments = segments.copy()
-
-    for line in translated_segments:
-        if line[0] != PLANT_SEGMENT_DEAD:
-            line[1], line[2] = line[1] + x_translation, line[2] + y_translation
-            line[3], line[4] = line[3] + x_translation, line[4] + y_translation
-
-    return translated_segments
+            detect_occluded_squares(world_array, l[1:], x_translation, y_translation, c_id)
 
 
 # This could be heavily optimized for plants because the translations only need to be performed once, and can be stored.
 def place_plants(world_params):
     for plant in world_params['plants']:
-        translated_plant_segments = translate_plant_segs_to_world(
-            plant['segments'],
-            plant['x_translation'],
-            plant['y_translation'])
-
-        draw_plant(plant['c_id'], translated_plant_segments, world_params['world_array'])
+        draw_plant(plant['c_id'], plant['segments'], plant['x_translation'], plant['y_translation'],
+                   world_params['world_array'])
