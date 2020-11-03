@@ -1,4 +1,5 @@
 import numpy as np
+import numba as nb
 
 from plants.plant_creation import generate_random_seedling
 from plants.plant_rendering import PLANT_SEGMENT_DEAD
@@ -27,9 +28,9 @@ def grow_plants(world_params):
                 # Mark random segment dead
                 plant['segments'][np.random.randint(0, len(plant['segments']) - 1)][0] = PLANT_SEGMENT_DEAD
 
-        if np.count_nonzero(plant['segments'][:, 0]) == 0:
-            world_params['plants'].pop(index)
-            world_params['dead_plants'].append(plant)
+            if np.count_nonzero(plant['segments'][:, 0]) == 0:
+                world_params['plants'].pop(index)
+                world_params['dead_plants'].append(plant)
 
     new_growth = []
 
@@ -57,14 +58,25 @@ def grow_plants(world_params):
                                                               0)
 
 
-def photosynthesize(world_params):
-    occupied_squares = np.nonzero(world_params['world_array'])
+@nb.jit(nopython=True, fastmath=True)
+def photosynthesize(world_array: np.array, carbon_dioxide_map: np.array, all_plants_dictionary: np.array):
+    occupied_squares = np.nonzero(world_array)
+
+    plants_to_breathe = breathe(carbon_dioxide_map, occupied_squares, world_array)
+
+    for plant_id in plants_to_breathe:
+        all_plants_dictionary[plant_id]['energy'] += ENERGY_GAINED_FROM_ONE_CARBON_DIOXIDE
+
+@nb.jit(nopython=True, fastmath=True)
+def breathe(carbon_dioxide_map: np.array, occupied_squares: np.array, world_array: np.array):
+    plants_to_breathe = np.array([])
     for index, x in enumerate(occupied_squares[0]):
         y = occupied_squares[1][index]
-        if world_params['carbon_dioxide_map'][x][y] > 0:
-            world_params['carbon_dioxide_map'][x][y] -= 1
-            world_params['all_plants_dictionary'][pull_plant_id_from_world(world_params, x, y)]['energy'] += ENERGY_GAINED_FROM_ONE_CARBON_DIOXIDE
+        if carbon_dioxide_map[x][y] > 0:
+            carbon_dioxide_map[x][y] -= 1
+            plants_to_breathe = np.append(plants_to_breathe, pull_plant_id_from_world(world_array, x, y))
+    return plants_to_breathe
 
-
-def pull_plant_id_from_world(world_params, x, y):
-    return world_params['world_array'][x][y]
+@nb.jit(nopython=True, fastmath=True)
+def pull_plant_id_from_world(world_array: np.array, x: int, y: int):
+    return world_array[x][y]
