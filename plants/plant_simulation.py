@@ -5,11 +5,11 @@ from plants.plant_rendering import PLANT_SEGMENT_DEAD
 
 ENERGY_COST_FOR_PLANTS_PER_FRAME = 1
 
-ENERGY_GAINED_FROM_ONE_CARBON_DIOXIDE = 100
+ENERGY_GAINED_FROM_ONE_CARBON_DIOXIDE: int = 100
 
-ENERGY_AFTER_ADDING_BRANCH = 4000
-ENERGY_AFTER_REPRODUCING = 4000
-ENERGY_NEEDED_TO_ADD_BRANCH = 5000
+ENERGY_AFTER_ADDING_BRANCH: int = 4000
+ENERGY_AFTER_REPRODUCING: int = 4000
+ENERGY_NEEDED_TO_ADD_BRANCH: int = 5000
 
 
 def grow_plants(world_params):
@@ -37,7 +37,9 @@ def grow_plants(world_params):
         if plant['energy'] > ENERGY_NEEDED_TO_ADD_BRANCH:
             if plant['age'] > plant['fertile_age']:
                 plant['energy'] = ENERGY_AFTER_REPRODUCING
-                world_params['plants'].append(generate_random_seedling(1, world_params))
+                seedling, seedling_id = generate_random_seedling(1, world_params)
+                world_params['all_plants_dictionary'][seedling_id] = seedling
+                world_params['plants'].append(seedling)
             else:
                 plant['energy'] = ENERGY_AFTER_ADDING_BRANCH
                 joined_seg = plant['segments'][
@@ -60,13 +62,8 @@ def photosynthesize(world_params):
     for index, x in enumerate(occupied_squares[0]):
         y = occupied_squares[1][index]
         if world_params['carbon_dioxide_map'][x][y] > 0:
-            plant = [(i, p) for i, p in enumerate(world_params['plants'])
-                     if p['c_id'] == pull_plant_id_from_world(world_params, x, y) - 1]
-            if len(plant) == 1:
-                world_params['carbon_dioxide_map'][x][y] -= 1
-                world_params['plants'][plant[0][0]]['energy'] += ENERGY_GAINED_FROM_ONE_CARBON_DIOXIDE
-            else:
-                pass
+            world_params['carbon_dioxide_map'][x][y] -= 1
+            world_params['all_plants_dictionary'][pull_plant_id_from_world(world_params, x, y)]['energy'] += ENERGY_GAINED_FROM_ONE_CARBON_DIOXIDE
 
 
 def pull_plant_id_from_world(world_params, x, y):

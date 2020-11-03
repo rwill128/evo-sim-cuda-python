@@ -45,15 +45,15 @@ def generate_random_seedling(num_segs: int, world_params, vicinity: (int, int) =
                 creature['segments'][i - 1, 4] + np.random.randint(-1, 1)]
             # TODO: ^^ This is where gene-based growth patterns would be implemented
 
-    return creature
+    return creature, creature['c_id']
 
 
 def spawn_new_plants(world_params, num_plants: int = 1):
-    new_plants = []
+    world_params['all_plants_dictionary'] = {}
+    world_params['plants'] = []
+    world_params['dead_plants'] = []
 
     for i in range(num_plants):
-        plant = generate_random_seedling(1, world_params)
-        new_plants.append(plant)
-
-    world_params['plants'] = new_plants
-    world_params['dead_plants'] = []
+        plant, creature_id = generate_random_seedling(1, world_params)
+        world_params['all_plants_dictionary'][creature_id] = plant
+        world_params['plants'].append(plant)
