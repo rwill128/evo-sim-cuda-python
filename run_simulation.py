@@ -1,9 +1,7 @@
 import numpy as np
-import creature_spawning.spawn_creature as sc
 import visualization.plant_rendering as pr
-import visualization.array_rendering as ar
 import simulation.gas_drift as gd
-import simulation.plant_simulation as ps
+import plants.plant_simulation as ps
 
 
 def run_sim_for_x_steps(world, steps):
