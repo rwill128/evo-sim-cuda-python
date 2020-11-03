@@ -2,7 +2,7 @@ import numpy as np
 
 ALIVE_SEGMENT = 1
 
-STARTING_PLANT_ENERGY = 90
+STARTING_PLANT_ENERGY = 1000
 
 
 def generate_random_seedling(num_segs: int, world_params, vicinity: (int, int) = None):
