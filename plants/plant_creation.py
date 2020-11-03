@@ -22,7 +22,7 @@ def generate_random_seedling(num_segs: int, world_params, vicinity: (int, int) =
         y_translation = np.min([new_location_or_min_value, max_x_or_y])
 
     creature = {
-        'c_id': world_params['global_creature_id_counter'],
+        'c_id': int(world_params['global_creature_id_counter']),
         'x_translation': x_translation,
         'y_translation': y_translation,
         'energy': STARTING_PLANT_ENERGY,

@@ -14,7 +14,7 @@ PLANT_SEGMENT_DEAD = 0
 def detect_occluded_squares(world_array: np.array, l: np.array, cid: float):
     x0, y0, x1, y1 = l
 
-    world_array[int(np.round(x0)), int(np.round(y0))] = cid
+    world_array[x0, y0] = cid
 
     if x1 != x0:
         slope = (y1 - y0) / (x1 - x0)

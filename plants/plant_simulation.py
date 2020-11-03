@@ -60,13 +60,14 @@ def photosynthesize(world_params):
     for index, x in enumerate(occupied_squares[0]):
         y = occupied_squares[1][index]
         if world_params['carbon_dioxide_map'][x][y] > 0:
-            plant = [p for p in world_params['plants'] if p['c_id'] == pull_plant_id_from_world(world_params, x, y) - 1]
+            plant = [(i, p) for i, p in enumerate(world_params['plants'])
+                     if p['c_id'] == pull_plant_id_from_world(world_params, x, y) - 1]
             if len(plant) == 1:
                 world_params['carbon_dioxide_map'][x][y] -= 1
-                plant[0]['energy'] += ENERGY_GAINED_FROM_ONE_CARBON_DIOXIDE
+                world_params['plants'][plant[0][0]]['energy'] += ENERGY_GAINED_FROM_ONE_CARBON_DIOXIDE
             else:
                 pass
 
 
 def pull_plant_id_from_world(world_params, x, y):
-    return int(np.round(world_params['world_array'][x][y]))
+    return world_params['world_array'][x][y]
