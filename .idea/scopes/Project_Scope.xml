@@ -1,0 +1,3 @@
+<component name="DependencyValidationManager">
+  <scope name="Project Scope" pattern="file[pythonProject1]:*/" />
+</component>

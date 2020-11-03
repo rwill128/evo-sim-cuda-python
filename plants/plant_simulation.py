@@ -12,6 +12,7 @@ ENERGY_NEEDED_TO_ADD_BRANCH = 5000
 
 def grow_plants(world_params):
     for index, plant in enumerate(world_params['plants']):
+        plant['age'] += 1
         if plant['energy'] > 0:
             plant['energy'] -= ENERGY_COST_FOR_PLANTS_PER_FRAME
         if plant['energy'] == 0:
