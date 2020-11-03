@@ -1,6 +1,6 @@
 import numpy as np
 
-from visualization.plant_rendering import PLANT_SEGMENT_DEAD
+from plants.plant_rendering import PLANT_SEGMENT_DEAD
 
 ENERGY_COST_FOR_PLANTS_PER_FRAME = 1
 

@@ -1,5 +1,5 @@
 import numpy as np
-import visualization.plant_rendering as pr
+import plants.plant_rendering as pr
 import simulation.gas_drift as gd
 import plants.plant_simulation as ps
 
