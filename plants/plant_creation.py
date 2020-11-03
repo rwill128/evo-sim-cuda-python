@@ -11,7 +11,9 @@ def generate_random_seedling(num_segs, world_params):
         'x_translation': np.random.randint(5, world_params['world_size'] - 5),
         'y_translation': np.random.randint(5, world_params['world_size'] - 5),
         'energy': STARTING_PLANT_ENERGY,
-        'segments': np.array([[1, 0, 0, np.random.randint(-1, 1), np.random.randint(-1, 1)]])
+        'segments': np.array([[1, 0, 0, np.random.randint(-1, 1), np.random.randint(-1, 1)]]),
+        'age': 0,
+        'fertile_age':5000
     }
 
     world_params['global_creature_id_counter'] = world_params['global_creature_id_counter'] + 1
