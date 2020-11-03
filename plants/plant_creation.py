@@ -5,15 +5,30 @@ ALIVE_SEGMENT = 1
 STARTING_PLANT_ENERGY = 1000
 
 
-def generate_random_seedling(num_segs, world_params):
+def generate_random_seedling(num_segs: int, world_params, vicinity: (int, int) = None):
+    max_x_or_y = world_params['world_size'] - 5
+    min_x_or_y: int = 5
+
+    if vicinity is None:
+        x_translation = np.random.randint(min_x_or_y, max_x_or_y)
+    else:
+        new_location_or_min_value = np.max([vicinity[0] + np.random.randint(-10, 10), min_x_or_y])
+        x_translation = np.min([new_location_or_min_value, max_x_or_y])
+
+    if vicinity is None:
+        y_translation = np.random.randint(5, max_x_or_y)
+    else:
+        new_location_or_min_value = np.max([vicinity[1] + np.random.randint(-10, 10), min_x_or_y])
+        y_translation = np.min([new_location_or_min_value, max_x_or_y])
+
     creature = {
         'c_id': world_params['global_creature_id_counter'],
-        'x_translation': np.random.randint(5, world_params['world_size'] - 5),
-        'y_translation': np.random.randint(5, world_params['world_size'] - 5),
+        'x_translation': x_translation,
+        'y_translation': y_translation,
         'energy': STARTING_PLANT_ENERGY,
         'segments': np.array([[1, 0, 0, np.random.randint(-1, 1), np.random.randint(-1, 1)]]),
         'age': 0,
-        'fertile_age':5000
+        'fertile_age': 5000
     }
 
     world_params['global_creature_id_counter'] = world_params['global_creature_id_counter'] + 1

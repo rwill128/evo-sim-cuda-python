@@ -27,16 +27,19 @@ def grow_plants(world_params):
 
     for index, plant in enumerate(world_params['plants']):
         if plant['energy'] > ENERGY_NEEDED_TO_ADD_BRANCH:
-            plant['energy'] = ENERGY_AFTER_ADDING_BRANCH
-            joined_seg = plant['segments'][
-                np.random.randint(0, len(plant['segments'] - 1))]  # TODO: Should only grow off of live segments
-            new_seg = [
-                1,
-                joined_seg[3],
-                joined_seg[4],
-                joined_seg[3] + np.random.randint(-1, 1),
-                joined_seg[4] + np.random.randint(-1, 1)]
-            new_growth.append((index, new_seg))
+            if plant['age'] > plant['fertile_age']:
+                pass
+            else:
+                plant['energy'] = ENERGY_AFTER_ADDING_BRANCH
+                joined_seg = plant['segments'][
+                    np.random.randint(0, len(plant['segments'] - 1))]  # TODO: Should only grow off of live segments
+                new_seg = [
+                    1,
+                    joined_seg[3],
+                    joined_seg[4],
+                    joined_seg[3] + np.random.randint(-1, 1),
+                    joined_seg[4] + np.random.randint(-1, 1)]
+                new_growth.append((index, new_seg))
 
     for index, new_segment in new_growth:
         world_params['plants'][index]['segments'] = np.append(world_params['plants'][index]['segments'], [new_segment], 0)
