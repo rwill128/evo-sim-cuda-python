@@ -13,8 +13,6 @@ ENERGY_NEEDED_TO_ADD_BRANCH = 5000
 
 
 def grow_plants(world_params):
-    dead_plants = []
-
     for index, plant in enumerate(world_params['plants']):
         plant['age'] += 1
         if plant['energy'] > 0:
@@ -29,15 +27,9 @@ def grow_plants(world_params):
                 # Mark random segment dead
                 plant['segments'][np.random.randint(0, len(plant['segments']) - 1)][0] = PLANT_SEGMENT_DEAD
 
-        if np.count_nonzero(plant['segments'][0][:]) == 0:
-            dead_plants.append(plant)
-        else:
-            pass
-
-    for dead_plant in dead_plants:
-        world_params['plants'].remove(dead_plant)
-        dead_plant['alive'] = False
-        world_params['dead_plants'].append(dead_plant)
+        if np.count_nonzero(plant['segments'][:, 0]) == 0:
+            world_params['plants'].pop(index)
+            world_params['dead_plants'].append(plant)
 
     new_growth = []
 
@@ -68,9 +60,12 @@ def photosynthesize(world_params):
     for index, x in enumerate(occupied_squares[0]):
         y = occupied_squares[1][index]
         if world_params['carbon_dioxide_map'][x][y] > 0:
-            world_params['carbon_dioxide_map'][x][y] -= 1
-            world_params['plants'][pull_plant_id_from_world(world_params, x, y) - 1][
-                'energy'] += ENERGY_GAINED_FROM_ONE_CARBON_DIOXIDE
+            plant = [p for p in world_params['plants'] if p['c_id'] == pull_plant_id_from_world(world_params, x, y) - 1]
+            if len(plant) == 1:
+                world_params['carbon_dioxide_map'][x][y] -= 1
+                plant[0]['energy'] += ENERGY_GAINED_FROM_ONE_CARBON_DIOXIDE
+            else:
+                pass
 
 
 def pull_plant_id_from_world(world_params, x, y):
