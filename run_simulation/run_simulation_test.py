@@ -1,7 +1,7 @@
 import unittest
 import numpy as np
 import visualization.array_rendering as ar
-import run_simulation as rs
+import run_simulation.run_simulation as rs
 import plants.plant_creation as pc
 import plants.plant_rendering as pr
 

@@ -13,7 +13,7 @@ def run_sim_for_x_steps(world, steps):
         world['carbon_dioxide_map'][int(world['world_size'] * .75)][int(world['world_size'] * .75)] += 1
 
         pr.place_plants(world)
-        ps.photosynthesize(world['world_array'], world['carbon_dioxide_map'], world['all_plants_dictionary'])
+        ps.photosynthesize(world)
         gd.move_gases(world['carbon_dioxide_map'], world['world_size'])
         ps.grow_plants(world)
 

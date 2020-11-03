@@ -58,30 +58,20 @@ def grow_plants(world_params):
                                                               0)
 
 
-def photosynthesize(world_array: np.array, carbon_dioxide_map: np.array, all_plants_dictionary: np.array):
-    plants_to_breathe: np.ndarray = np.empty(1, dtype=int)
-    plants_to_breathe[0] = 0
-
-    breathe(world_array, carbon_dioxide_map, plants_to_breathe)
-
-    if len(plants_to_breathe) > 0 and plants_to_breathe[0] != 0:
-        for plant_id in plants_to_breathe:
-            all_plants_dictionary[plant_id]['energy'] += ENERGY_GAINED_FROM_ONE_CARBON_DIOXIDE
-
-
-@nb.jit(nopython=True, fastmath=True)
-def breathe(world_array: np.array, carbon_dioxide_map: np.array, plants_to_breathe: np.array):
-    occupied_squares = np.nonzero(world_array)
+def photosynthesize(world_params):
+    occupied_squares = get_occupied_squares(world_params['world_array'])
     for index, x in enumerate(occupied_squares[0]):
         y = occupied_squares[1][index]
-        if carbon_dioxide_map[x][y] > 0:
-            carbon_dioxide_map[x][y] = carbon_dioxide_map[x][y]
-            if plants_to_breathe[0] == 0:
-                plants_to_breathe[0] = pull_plant_id_from_world(world_array, x, y)
-            else:
-                plants_to_breathe = np.append(plants_to_breathe, pull_plant_id_from_world(world_array, x, y))
+        if world_params['carbon_dioxide_map'][x][y] > 0:
+            world_params['carbon_dioxide_map'][x][y] -= 1
+            world_params['all_plants_dictionary'][pull_plant_id_from_world(world_params, x, y)][
+                'energy'] += ENERGY_GAINED_FROM_ONE_CARBON_DIOXIDE
 
 
-@nb.jit(nopython=True, fastmath=True)
-def pull_plant_id_from_world(world_array: np.array, x: int, y: int):
-    return world_array[x][y]
+@nb.jit(nopython=True)
+def get_occupied_squares(world_array: np.array):
+    return np.nonzero(world_array)
+
+
+def pull_plant_id_from_world(world_params, x, y):
+    return world_params['world_array'][x][y]
