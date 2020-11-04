@@ -25,10 +25,10 @@ def generate_random_seedling(num_segs: int, world_params, vicinity: (int, int) =
         'c_id': int(world_params['global_creature_id_counter']),
         'x_translation': x_translation,
         'y_translation': y_translation,
-        'energy': STARTING_PLANT_ENERGY,
+        'energy': STARTING_PLANT_ENERGY, # TODO: Make it so starting energy is based on how much energy the parent plant gives.
         'segments': np.array([[1, 0, 0, np.random.randint(-1, 1), np.random.randint(-1, 1)]]),
         'age': 0,
-        'fertile_age': 1000,
+        'fertile_age': 1000, # TODO: Make it so that fertile age is subject to mutation.
         'alive': True
     }
 
