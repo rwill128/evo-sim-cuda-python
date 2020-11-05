@@ -35,9 +35,9 @@ def emit_gases(world, emitters):
         if emitter['y'] < 5 and emitter['vy'] < 0:
             emitter['vy'] = -emitter['vy']
 
-        if emitter['x'] > world['world_size'] and emitter['vx'] > 0:
+        if emitter['x'] > world['world_size'] - 5 and emitter['vx'] > 0:
             emitter['vx'] = -emitter['vx']
-        if emitter['y'] > world['world_size'] and emitter['vy'] > 0:
+        if emitter['y'] > world['world_size'] - 5 and emitter['vy'] > 0:
             emitter['vy'] = -emitter['vy']
 
         emitter['x'] += emitter['vx']
