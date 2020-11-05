@@ -6,9 +6,28 @@ def generate_random_seedling(num_segs: int, world_params, vicinity: (int, int) =
     max_x_or_y = world_params['world_size'] - 5
     min_x_or_y: int = 5
 
+    if parent_creature is not None:
+        starting_energy = parent_creature['motherhood_cost']
+        parent_creature['energy'] -= parent_creature['motherhood_cost']
+
+        fertile_age = parent_creature['fertile_age'] + np.random.randint(-1, 1)
+        child_motherhood_cost = parent_creature['motherhood_cost'] + np.random.randint(-1, 1)
+        throw_distance = parent_creature['throw_distance'] + np.random.randint(-1, 1)
+
+        lineage = parent_creature['lineage'].copy()
+        lineage.append(parent_creature['c_id'])
+    else:
+        starting_energy = 1000
+        child_motherhood_cost = np.random.randint(10, 10000)
+        lineage = []
+        fertile_age = np.random.randint(10, 10000)
+        throw_distance = np.random.randint(10, 10000)
+
+
     if vicinity is None:
         x_translation = np.random.randint(min_x_or_y, max_x_or_y)
     else:
+        # TODO: Throw distance should cost energy because it allow parents and children not to interfere with each other
         new_location_or_min_value = np.max([vicinity[0] + np.random.randint(-10, 10), min_x_or_y])
         x_translation = np.min([new_location_or_min_value, max_x_or_y])
 
@@ -17,20 +36,6 @@ def generate_random_seedling(num_segs: int, world_params, vicinity: (int, int) =
     else:
         new_location_or_min_value = np.max([vicinity[1] + np.random.randint(-10, 10), min_x_or_y])
         y_translation = np.min([new_location_or_min_value, max_x_or_y])
-
-    if parent_creature is not None:
-        starting_energy = parent_creature['motherhood_cost']
-        parent_creature['energy'] -= parent_creature['motherhood_cost']
-
-        fertile_age = parent_creature['fertile_age'] + np.random.randint(-1, 1)
-        child_motherhood_cost = parent_creature['motherhood_cost'] + np.random.randint(-1, 1)
-        lineage = parent_creature['lineage'].copy()
-        lineage.append(parent_creature['c_id'])
-    else:
-        starting_energy = 1000
-        child_motherhood_cost = np.random.randint(10, 10000)
-        lineage = []
-        fertile_age = np.random.randint(10, 10000)
 
     creature = {
         'c_id': int(world_params['global_creature_id_counter']),
@@ -42,7 +47,9 @@ def generate_random_seedling(num_segs: int, world_params, vicinity: (int, int) =
         'fertile_age': fertile_age,
         'alive': True,
         'motherhood_cost': child_motherhood_cost,
-        'lineage': lineage
+        'lineage': lineage,
+        'energy_floor_for_growth': np.random.randint(10, 10000),
+        'throw_distance': throw_distance
     }
 
     world_params['global_creature_id_counter'] = world_params['global_creature_id_counter'] + 1

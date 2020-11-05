@@ -8,9 +8,7 @@ ENERGY_COST_FOR_PLANTS_PER_FRAME = 1
 
 ENERGY_GAINED_FROM_ONE_CARBON_DIOXIDE: int = 100
 
-ENERGY_AFTER_ADDING_BRANCH: int = 4000
-ENERGY_AFTER_REPRODUCING: int = 4000
-ENERGY_NEEDED_TO_ADD_BRANCH: int = 5000
+COST_OF_GROWTH: int = 1000
 
 
 def grow_plants(world_params):
@@ -39,8 +37,8 @@ def grow_plants(world_params):
             seedling, seedling_id = generate_random_seedling(1, world_params, (plant['x_translation'], plant['y_translation']), plant)
             world_params['all_plants_dictionary'][seedling_id] = seedling
             world_params['plants'].append(seedling)
-        if plant['energy'] > ENERGY_NEEDED_TO_ADD_BRANCH and plant['age'] < plant['fertile_age']:
-            plant['energy'] = ENERGY_AFTER_ADDING_BRANCH
+        if plant['energy'] > plant['energy_floor_for_growth'] and plant['age'] < plant['fertile_age']:
+            plant['energy'] -= COST_OF_GROWTH
             joined_seg = plant['segments'][
                 np.random.randint(0, len(plant['segments'] - 1))]  # TODO: Should only grow off of live segments
             new_seg = [
