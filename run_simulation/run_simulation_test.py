@@ -1,10 +1,9 @@
 import unittest
 import numpy as np
 import visualization.array_rendering as ar
-import run_simulation.run_simulation as rs
 import plants.plant_creation as pc
 import plants.plant_rendering as pr
-
+import run_simulation.run_simulation as rs
 
 class RunSimulationTest(unittest.TestCase):
     def test_run_simulation(self):
@@ -18,7 +17,7 @@ class RunSimulationTest(unittest.TestCase):
                             num_plants=2000)
         pr.place_plants(world_params)
 
-        rs.run_sim_for_x_steps(world_params, 10000)
+        rs.run_sim_for_x_steps(world_params, 1000)
 
         ar.render_array(world_params['world_array'], 'Plants')
         ar.render_array(world_params['carbon_dioxide_map'], 'Carbon Dioxide')

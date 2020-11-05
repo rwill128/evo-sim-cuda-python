@@ -1,17 +1,43 @@
 import numpy as np
 import plants.plant_rendering as pr
-import simulation.gas_drift as gd
+import gases.gas_drift as gd
 import plants.plant_simulation as ps
 
 
 def run_sim_for_x_steps(world, steps):
+
+    emitter1 = {
+        'x': int(world['world_size'] * .25),
+        'y': int(world['world_size'] * .25),
+        'vx': np.randomint(-1, 1),
+        'vy': np.randomint(-1, 1)
+    }
+    emitter2 = {
+        'x': int(world['world_size'] * .25),
+        'y': int(world['world_size'] * .75),
+        'vx': np.randomint(-1, 1),
+        'vy': np.randomint(-1, 1)
+    }
+    emitter3 = {
+        'x': int(world['world_size'] * .75),
+        'y': int(world['world_size'] * .25),
+        'vx': np.randomint(-1, 1),
+        'vy': np.randomint(-1, 1)
+    }
+    emitter4 = {
+        'x': int(world['world_size'] * .75),
+        'y': int(world['world_size'] * .75),
+        'vx': np.randomint(-1, 1),
+        'vy': np.randomint(-1, 1)
+    }
+
+    emitters = [emitter1, emitter2, emitter3, emitter4]
+
     for i in range(steps):
         world['world_array'] = np.zeros(shape=(world['world_size'], world['world_size']), dtype=int)
         # TODO: Make it so that these points drift every 100 frames or so.
-        world['carbon_dioxide_map'][int(world['world_size'] * .25)][int(world['world_size'] * .25)] += 1
-        world['carbon_dioxide_map'][int(world['world_size'] * .25)][int(world['world_size'] * .75)] += 1
-        world['carbon_dioxide_map'][int(world['world_size'] * .75)][int(world['world_size'] * .25)] += 1
-        world['carbon_dioxide_map'][int(world['world_size'] * .75)][int(world['world_size'] * .75)] += 1
+
+        gd.emit_gases(world, emitters)
 
         pr.place_plants(world)
         ps.photosynthesize(world)
@@ -22,3 +48,5 @@ def run_sim_for_x_steps(world, steps):
 
     world['world_array'] = np.zeros(shape=(world['world_size'], world['world_size']), dtype=int)
     pr.place_plants(world)
+
+

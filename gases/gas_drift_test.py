@@ -2,7 +2,7 @@ import unittest
 import numpy as np
 from scipy.sparse import csc_matrix
 
-import simulation.gas_drift as gd
+import gases.gas_drift as gd
 import visualization.array_rendering as ar
 import scipy.sparse as sparse
 

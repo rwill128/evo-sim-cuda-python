@@ -23,3 +23,22 @@ def move_gases(gas_map: np.array, world_size: int):
             i, j = possible_places_to_go[np.random.randint(0, len(possible_places_to_go))]
             gas_map[x][y] -= 1
             gas_map[i][j] += 1
+
+
+def emit_gases(world, emitters):
+    
+    for emitter in emitters:
+        world['carbon_dioxide_map'][emitter['x']][emitter['y']] += 1
+
+        if emitter['x'] < 5 and emitter['vx'] < 0:
+            emitter['vx'] = -emitter['vx']        
+        if emitter['y'] < 5 and emitter['vy'] < 0:
+            emitter['vy'] = -emitter['vy']
+
+        if emitter['x'] > world['world_size'] and emitter['vx'] > 0:
+            emitter['vx'] = -emitter['vx']
+        if emitter['y'] > world['world_size'] and emitter['vy'] > 0:
+            emitter['vy'] = -emitter['vy']
+
+        emitter['x'] += emitter['vx']
+        emitter['y'] += emitter['vy']
