@@ -17,7 +17,7 @@ def grow_plants(world_params):
         if plant['energy'] > 0:
             plant['energy'] -= ENERGY_COST_FOR_PLANTS_PER_FRAME
 
-        if plant['energy'] == 0:
+        if plant['energy'] <= 0:
 
             if len(plant['segments']) == 1:
                 # Mark only segment dead

@@ -10,26 +10,26 @@ def run_sim_for_x_steps(world, steps):
     emitter1 = {
         'x': int(world['world_size'] * .25),
         'y': int(world['world_size'] * .25),
-        'vx': np.random.randint(-1, 1),
-        'vy': np.random.randint(-1, 1)
+        'vx': np.random.choice([-1, 1]),
+        'vy': np.random.choice([-1, 1])
     }
     emitter2 = {
         'x': int(world['world_size'] * .25),
         'y': int(world['world_size'] * .75),
-        'vx': np.random.randint(-1, 1),
-        'vy': np.random.randint(-1, 1)
+        'vx': np.random.choice([-1, 1]),
+        'vy': np.random.choice([-1, 1])
     }
     emitter3 = {
         'x': int(world['world_size'] * .75),
         'y': int(world['world_size'] * .25),
-        'vx': np.random.randint(-1, 1),
-        'vy': np.random.randint(-1, 1)
+        'vx': np.random.choice([-1, 1]),
+        'vy': np.random.choice([-1, 1])
     }
     emitter4 = {
         'x': int(world['world_size'] * .75),
         'y': int(world['world_size'] * .75),
-        'vx': np.random.randint(-1, 1),
-        'vy': np.random.randint(-1, 1)
+        'vx': np.random.choice([-1, 1]),
+        'vy': np.random.choice([-1, 1])
     }
 
     emitters = [emitter1, emitter2, emitter3, emitter4]
