@@ -22,11 +22,12 @@ def generate_random_seedling(num_segs: int, world_params, vicinity: (int, int) =
         starting_energy = parent_creature['motherhood_cost']
         parent_creature['energy'] -= parent_creature['motherhood_cost']
         child_motherhood_cost = parent_creature['motherhood_cost'] + np.random.randint(-1, 1)
-        lineage = parent_creature['lineage'].append(int(world_params['global_creature_id_counter']))
+        lineage = parent_creature['lineage'].copy()
+        lineage.append(parent_creature['c_id'])
     else:
         starting_energy = 1000
         child_motherhood_cost = 1000
-        lineage = [int(world_params['global_creature_id_counter'])]
+        lineage = []
 
     creature = {
         'c_id': int(world_params['global_creature_id_counter']),

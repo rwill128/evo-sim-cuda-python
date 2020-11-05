@@ -17,7 +17,7 @@ class RunSimulationTest(unittest.TestCase):
                             num_plants=10)
         pr.place_plants(world_params)
 
-        rs.run_sim_for_x_steps(world_params, 10000)
+        rs.run_sim_for_x_steps(world_params, 50000)
 
         ar.render_array(world_params['world_array'], 'Plants')
         ar.render_array(world_params['carbon_dioxide_map'], 'Carbon Dioxide')
