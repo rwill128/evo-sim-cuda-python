@@ -31,7 +31,7 @@ def run_sim_for_x_steps(world, steps):
         'vy': np.random.randint(-1, 1)
     }
 
-    emitters = [emitter1, emitter2]
+    emitters = [emitter1, emitter2, emitter3, emitter4]
 
     for i in range(steps):
         world['world_array'] = np.zeros(shape=(world['world_size'], world['world_size']), dtype=int)

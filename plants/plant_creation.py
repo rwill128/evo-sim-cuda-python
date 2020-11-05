@@ -21,13 +21,16 @@ def generate_random_seedling(num_segs: int, world_params, vicinity: (int, int) =
     if parent_creature is not None:
         starting_energy = parent_creature['motherhood_cost']
         parent_creature['energy'] -= parent_creature['motherhood_cost']
+
+        fertile_age = parent_creature['fertile_age'] + np.random.randint(-1, 1)
         child_motherhood_cost = parent_creature['motherhood_cost'] + np.random.randint(-1, 1)
         lineage = parent_creature['lineage'].copy()
         lineage.append(parent_creature['c_id'])
     else:
         starting_energy = 1000
-        child_motherhood_cost = 1000
+        child_motherhood_cost = np.random.randint(10, 10000)
         lineage = []
+        fertile_age = np.random.randint(10, 10000)
 
     creature = {
         'c_id': int(world_params['global_creature_id_counter']),
@@ -36,7 +39,7 @@ def generate_random_seedling(num_segs: int, world_params, vicinity: (int, int) =
         'energy': starting_energy,
         'segments': np.array([[1, 0, 0, np.random.randint(-1, 1), np.random.randint(-1, 1)]]),
         'age': 0,
-        'fertile_age': 1000, # TODO: Make it so that fertile age is subject to mutation.
+        'fertile_age': fertile_age,
         'alive': True,
         'motherhood_cost': child_motherhood_cost,
         'lineage': lineage

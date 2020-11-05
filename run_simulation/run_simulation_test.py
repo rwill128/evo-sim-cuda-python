@@ -14,10 +14,10 @@ class RunSimulationTest(unittest.TestCase):
         world_params['carbon_dioxide_map'] = np.full(shape=(world_params['world_size'], world_params['world_size']),
                                                      fill_value=0)
         pc.spawn_new_plants(world_params=world_params,
-                            num_plants=10)
+                            num_plants=100)
         pr.place_plants(world_params)
 
-        rs.run_sim_for_x_steps(world_params, 50000)
+        rs.run_sim_for_x_steps(world_params, 15000)
 
         ar.render_array(world_params['world_array'], 'Plants')
         ar.render_array(world_params['carbon_dioxide_map'], 'Carbon Dioxide')

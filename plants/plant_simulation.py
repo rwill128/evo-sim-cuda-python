@@ -39,7 +39,7 @@ def grow_plants(world_params):
             seedling, seedling_id = generate_random_seedling(1, world_params, (plant['x_translation'], plant['y_translation']), plant)
             world_params['all_plants_dictionary'][seedling_id] = seedling
             world_params['plants'].append(seedling)
-        if plant['energy'] > ENERGY_NEEDED_TO_ADD_BRANCH:
+        if plant['energy'] > ENERGY_NEEDED_TO_ADD_BRANCH and plant['age'] < plant['fertile_age']:
             plant['energy'] = ENERGY_AFTER_ADDING_BRANCH
             joined_seg = plant['segments'][
                 np.random.randint(0, len(plant['segments'] - 1))]  # TODO: Should only grow off of live segments
