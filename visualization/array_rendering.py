@@ -12,7 +12,10 @@ def render_array(l: np.ndarray, title):
     plt.show()
     plt.close(fig1)
 
-
+# TODO: Actually, use another visualization library
+# https://seaborn.pydata.org/
+# https://holoviews.org/
+# http://ggplot.yhathq.com/
 def display_world(world_params):
     fig2: object = plt.figure()
     fig2.suptitle('The World')

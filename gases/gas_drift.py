@@ -26,9 +26,14 @@ def move_gases(gas_map: np.array, world_size: int):
 
 
 def emit_gases(world, emitters):
-    
     for emitter in emitters:
         world['carbon_dioxide_map'][emitter['x']][emitter['y']] += 1
+
+        # TODO: Every 100 frames or so randomly decide whether to flip velocities
+        # Crappy hack job POC below
+        if world['global_creature_id_counter'] % 100 == 0:
+            emitter['x'] = np.random.randint(5, world['world_size'] - 5)
+            emitter['y'] = np.random.randint(5, world['world_size'] - 5)
 
         if emitter['x'] < 5 and emitter['vx'] < 0:
             emitter['vx'] = -emitter['vx']        

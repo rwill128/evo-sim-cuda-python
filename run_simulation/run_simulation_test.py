@@ -17,7 +17,7 @@ class RunSimulationTest(unittest.TestCase):
                             num_plants=200)
         pr.place_plants(world_params)
 
-        rs.run_sim_for_x_steps(world_params, 15000)
+        rs.run_sim_for_x_steps(world_params, 100000)
 
 
 if __name__ == '__main__':
