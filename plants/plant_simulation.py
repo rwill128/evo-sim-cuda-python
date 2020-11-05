@@ -38,7 +38,7 @@ def grow_plants(world_params):
             world_params['all_plants_dictionary'][seedling_id] = seedling
             world_params['plants'].append(seedling)
         if plant['energy'] > plant['energy_floor_for_growth'] and plant['age'] < plant['fertile_age']:
-            plant['energy'] -= COST_OF_GROWTH
+            plant['energy'] -= plant['energy_cost_for_growth']
             joined_seg = plant['segments'][
                 np.random.randint(0, len(plant['segments'] - 1))]  # TODO: Should only grow off of live segments
             new_seg = [

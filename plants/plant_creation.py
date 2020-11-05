@@ -49,7 +49,8 @@ def generate_random_seedling(num_segs: int, world_params, vicinity: (int, int) =
         'motherhood_cost': child_motherhood_cost,
         'lineage': lineage,
         'energy_floor_for_growth': np.random.randint(10, 10000),
-        'throw_distance': throw_distance
+        'throw_distance': throw_distance,
+        'energy_cost_for_growth': np.random.randint(10, 10000)
     }
 
     world_params['global_creature_id_counter'] = world_params['global_creature_id_counter'] + 1
