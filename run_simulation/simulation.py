@@ -31,11 +31,10 @@ def run_sim_for_x_steps(world, steps):
         'vy': np.random.randint(-1, 1)
     }
 
-    emitters = [emitter1, emitter2, emitter3, emitter4]
+    emitters = [emitter1]
 
     for i in range(steps):
         world['world_array'] = np.zeros(shape=(world['world_size'], world['world_size']), dtype=int)
-        # TODO: Make it so that these points drift every 100 frames or so.
 
         gd.emit_gases(world, emitters)
 

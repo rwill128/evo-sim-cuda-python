@@ -35,23 +35,21 @@ def grow_plants(world_params):
     new_growth = []
 
     for index, plant in enumerate(world_params['plants']):
+        if plant['age'] > plant['fertile_age'] and plant['energy'] > plant['motherhood_cost']:
+            seedling, seedling_id = generate_random_seedling(1, world_params, (plant['x_translation'], plant['y_translation']), plant)
+            world_params['all_plants_dictionary'][seedling_id] = seedling
+            world_params['plants'].append(seedling)
         if plant['energy'] > ENERGY_NEEDED_TO_ADD_BRANCH:
-            if plant['age'] > plant['fertile_age']:
-                plant['energy'] = ENERGY_AFTER_REPRODUCING
-                seedling, seedling_id = generate_random_seedling(1, world_params)
-                world_params['all_plants_dictionary'][seedling_id] = seedling
-                world_params['plants'].append(seedling)
-            else:
-                plant['energy'] = ENERGY_AFTER_ADDING_BRANCH
-                joined_seg = plant['segments'][
-                    np.random.randint(0, len(plant['segments'] - 1))]  # TODO: Should only grow off of live segments
-                new_seg = [
-                    1,
-                    joined_seg[3],
-                    joined_seg[4],
-                    joined_seg[3] + np.random.randint(-1, 1),
-                    joined_seg[4] + np.random.randint(-1, 1)]
-                new_growth.append((index, new_seg))
+            plant['energy'] = ENERGY_AFTER_ADDING_BRANCH
+            joined_seg = plant['segments'][
+                np.random.randint(0, len(plant['segments'] - 1))]  # TODO: Should only grow off of live segments
+            new_seg = [
+                1,
+                joined_seg[3],
+                joined_seg[4],
+                joined_seg[3] + np.random.randint(-1, 1),
+                joined_seg[4] + np.random.randint(-1, 1)]
+            new_growth.append((index, new_seg))
 
     for index, new_segment in new_growth:
         world_params['plants'][index]['segments'] = np.append(world_params['plants'][index]['segments'], [new_segment],

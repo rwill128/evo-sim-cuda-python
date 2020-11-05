@@ -2,10 +2,7 @@ import numpy as np
 
 ALIVE_SEGMENT = 1
 
-STARTING_PLANT_ENERGY = 1000
-
-
-def generate_random_seedling(num_segs: int, world_params, vicinity: (int, int) = None):
+def generate_random_seedling(num_segs: int, world_params, vicinity: (int, int) = None, parent_creature = None):
     max_x_or_y = world_params['world_size'] - 5
     min_x_or_y: int = 5
 
@@ -21,15 +18,27 @@ def generate_random_seedling(num_segs: int, world_params, vicinity: (int, int) =
         new_location_or_min_value = np.max([vicinity[1] + np.random.randint(-10, 10), min_x_or_y])
         y_translation = np.min([new_location_or_min_value, max_x_or_y])
 
+    if parent_creature is not None:
+        starting_energy = parent_creature['motherhood_cost']
+        parent_creature['energy'] -= parent_creature['motherhood_cost']
+        child_motherhood_cost = parent_creature['motherhood_cost'] + np.random.randint(-1, 1)
+        lineage = parent_creature['lineage'].append(int(world_params['global_creature_id_counter']))
+    else:
+        starting_energy = 1000
+        child_motherhood_cost = 1000
+        lineage = [int(world_params['global_creature_id_counter'])]
+
     creature = {
         'c_id': int(world_params['global_creature_id_counter']),
         'x_translation': x_translation,
         'y_translation': y_translation,
-        'energy': STARTING_PLANT_ENERGY, # TODO: Make it so starting energy is based on how much energy the parent plant gives.
+        'energy': starting_energy,
         'segments': np.array([[1, 0, 0, np.random.randint(-1, 1), np.random.randint(-1, 1)]]),
         'age': 0,
         'fertile_age': 1000, # TODO: Make it so that fertile age is subject to mutation.
-        'alive': True
+        'alive': True,
+        'motherhood_cost': child_motherhood_cost,
+        'lineage': lineage
     }
 
     world_params['global_creature_id_counter'] = world_params['global_creature_id_counter'] + 1
