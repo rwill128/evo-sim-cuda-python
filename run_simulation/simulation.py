@@ -48,4 +48,3 @@ def run_sim_for_x_steps(world, steps):
         if i % 500 == 0:
             ar.render_array(world['world_array'], 'Plants')
             ar.render_array(world['carbon_dioxide_map'], 'Carbon Dioxide')
-            pass

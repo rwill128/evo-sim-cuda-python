@@ -2,7 +2,8 @@ import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 import numpy as np
 
-
+# TODO: Add rendering caller to pass in a color and a world, with a key to use for the intensity such as age.
+# Will need basically a reduce function over the plant list
 def render_array(l: np.ndarray, title):
     fig1 = plt.figure(figsize=(20, 20))
     ax4 = fig1.add_subplot(122)
