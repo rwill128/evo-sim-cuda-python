@@ -13,6 +13,10 @@ def generate_random_seedling(num_segs: int, world_params, vicinity: (int, int) =
         fertile_age = parent_creature['fertile_age'] + np.random.randint(-1, 1)
         child_motherhood_cost = parent_creature['motherhood_cost'] + np.random.randint(-1, 1)
         throw_distance = parent_creature['throw_distance'] + np.random.randint(-1, 1)
+        energy_floor_for_growth = parent_creature['energy_floor_for_growth']
+        energy_cost_for_growth =  parent_creature['energy_cost_for_growth']
+        energy_gained_from_one_carbon_dioxide =  parent_creature['energy_gained_from_one_carbon_dioxide']
+        energy_cost_per_frame =  parent_creature['energy_cost_per_frame']
 
         lineage = parent_creature['lineage'].copy()
         lineage.append(parent_creature['c_id'])
@@ -22,7 +26,10 @@ def generate_random_seedling(num_segs: int, world_params, vicinity: (int, int) =
         lineage = []
         fertile_age = np.random.randint(10, 10000)
         throw_distance = np.random.randint(10, 10000)
-
+        energy_floor_for_growth = np.random.randint(10, 10000)
+        energy_cost_for_growth = np.random.randint(10, 10000)
+        energy_gained_from_one_carbon_dioxide = np.random.randint(10, 10000)
+        energy_cost_per_frame = np.random.randint(10, 10000)
 
     if vicinity is None:
         x_translation = np.random.randint(min_x_or_y, max_x_or_y)
@@ -48,9 +55,11 @@ def generate_random_seedling(num_segs: int, world_params, vicinity: (int, int) =
         'alive': True,
         'motherhood_cost': child_motherhood_cost,
         'lineage': lineage,
-        'energy_floor_for_growth': np.random.randint(10, 10000),
+        'energy_floor_for_growth': energy_floor_for_growth,
         'throw_distance': throw_distance,
-        'energy_cost_for_growth': np.random.randint(10, 10000)
+        'energy_cost_for_growth': energy_cost_for_growth,
+        'energy_gained_from_one_carbon_dioxide': energy_gained_from_one_carbon_dioxide,
+        'energy_cost_per_frame': energy_cost_per_frame
     }
 
     world_params['global_creature_id_counter'] = world_params['global_creature_id_counter'] + 1
