@@ -4,20 +4,14 @@ import numba as nb
 from plants.plant_creation import generate_random_seedling
 from plants.plant_rendering import PLANT_SEGMENT_DEAD
 
-ENERGY_COST_FOR_PLANTS_PER_FRAME = 1
-
-ENERGY_GAINED_FROM_ONE_CARBON_DIOXIDE: int = 100
-
-COST_OF_GROWTH: int = 1000
-
 
 def grow_plants(world_params):
     for index, plant in enumerate(world_params['plants']):
         plant['age'] += 1
         if plant['energy'] > 0:
-            plant['energy'] -= ENERGY_COST_FOR_PLANTS_PER_FRAME
+            plant['energy'] -= plant['energy_cost_per_frame']
 
-        if plant['energy'] == 0:
+        if plant['energy'] <= 0:
 
             if len(plant['segments']) == 1:
                 # Mark only segment dead
@@ -61,7 +55,7 @@ def photosynthesize(world_params):
         if world_params['carbon_dioxide_map'][x][y] > 0:
             world_params['carbon_dioxide_map'][x][y] -= 1
             world_params['all_plants_dictionary'][pull_plant_id_from_world(world_params, x, y)][
-                'energy'] += ENERGY_GAINED_FROM_ONE_CARBON_DIOXIDE
+                'energy'] += world_params['all_plants_dictionary'][pull_plant_id_from_world(world_params, x, y)]['energy_gained_from_one_carbon_dioxide']
 
 
 @nb.jit(nopython=True)
