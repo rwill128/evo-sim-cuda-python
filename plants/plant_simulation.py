@@ -18,8 +18,10 @@ def grow_plants(world_params):
                 plant['segments'][0][0] = PLANT_SEGMENT_DEAD
             else:
                 # Mark random segment dead
-                alive_segments = plant['segments'][np.where(plant['segments'][:, 0] != 0)]
-                alive_segments[np.random.randint(0, len(alive_segments))][0] = PLANT_SEGMENT_DEAD
+
+                alive_segment_indexes = np.where(plant['segments'][:, 0] != 0)
+                segment_to_kill_index = np.random.choice(alive_segment_indexes[0])
+                plant['segments'][segment_to_kill_index][0] = PLANT_SEGMENT_DEAD
 
             if np.count_nonzero(plant['segments'][:, 0]) == 0:
                 world_params['plants'].pop(index)
