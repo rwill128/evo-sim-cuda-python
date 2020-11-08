@@ -52,7 +52,7 @@ def grow_plants(world_params):
 
 
 def photosynthesize(world_params):
-    occupied_squares = get_occupied_squares(world_params['world_array'])
+    occupied_squares = get_occupied_squares(world_params['plant_location_array'])
     for index, x in enumerate(occupied_squares[0]):
         y = occupied_squares[1][index]
         if world_params['carbon_dioxide_map'][x][y] > 0:
@@ -62,9 +62,9 @@ def photosynthesize(world_params):
 
 
 @nb.jit(nopython=True)
-def get_occupied_squares(world_array: np.array):
-    return np.nonzero(world_array)
+def get_occupied_squares(plant_location_array: np.array):
+    return np.nonzero(plant_location_array)
 
 
 def pull_plant_id_from_world(world_params, x, y):
-    return world_params['world_array'][x][y]
+    return world_params['plant_location_array'][x][y]

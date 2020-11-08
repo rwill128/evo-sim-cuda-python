@@ -3,6 +3,8 @@ import numpy as np
 import plants.plant_creation as pc
 import plants.plant_rendering as pr
 import run_simulation.simulation as rs
+import asset_generation.land_creation as lc
+import visualization.array_rendering as ar
 
 
 class RunSimulationTest(unittest.TestCase):
@@ -11,7 +13,16 @@ class RunSimulationTest(unittest.TestCase):
     def test_run_simulation(self):
         world_params = {'world_size': 200,
                         'global_creature_id_counter': int(1)}
-        world_params['world_array'] = np.zeros(shape=(world_params['world_size'], world_params['world_size']),
+
+        template = lc.create_template(200, 200)
+        smoothed_template = lc.add_smoothing_to_template(template)
+        land, water = lc.generate_land_and_water_from_template(smoothed_template, 0.5)
+        entire_surface = lc.entire_surface(land, water)
+
+        world_params['land_array'] = land
+        world_params['water_array'] = water
+
+        world_params['plant_location_array'] = np.zeros(shape=(world_params['world_size'], world_params['world_size']),
                                                dtype=int)
         world_params['carbon_dioxide_map'] = np.full(shape=(world_params['world_size'], world_params['world_size']),
                                                      fill_value=0)

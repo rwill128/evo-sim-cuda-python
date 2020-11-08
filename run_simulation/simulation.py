@@ -35,7 +35,7 @@ def run_sim_for_x_steps(world, steps):
     emitters = [emitter1, emitter2, emitter3, emitter4]
 
     for i in range(steps):
-        world['world_array'] = np.zeros(shape=(world['world_size'], world['world_size']), dtype=int)
+        world['plant_location_array'] = np.zeros(shape=(world['world_size'], world['world_size']), dtype=int)
 
         gd.emit_gases(world, emitters)
 
