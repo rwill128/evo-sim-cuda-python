@@ -12,8 +12,10 @@ def generate_random_seedling(num_segs: int, world_params, vicinity: (int, int) =
 
         starting_energy = parent_creature['motherhood_cost']
 
+        # TODO: Add variability and heritability of mutation rate.
         fertile_age = parent_creature['fertile_age'] + np.random.randint(-1, 1)
         child_motherhood_cost = parent_creature['motherhood_cost'] + np.random.randint(-1, 1)
+
         throw_distance = parent_creature['throw_distance'] + np.random.randint(-1, 1)
         energy_floor_for_growth = parent_creature['energy_floor_for_growth'] + np.random.randint(-1, 1)
         energy_cost_for_growth = parent_creature['energy_cost_for_growth'] + np.random.randint(-1, 1)
@@ -24,11 +26,15 @@ def generate_random_seedling(num_segs: int, world_params, vicinity: (int, int) =
         lineage.append(parent_creature['c_id'])
     else:
         starting_energy = 1000
+
+        # TODO: Same question as below
         child_motherhood_cost = np.random.randint(10, 10000)
         lineage = []
         fertile_age = np.random.randint(10, 10000)
         throw_distance = np.random.randint(10, 10000)
         energy_floor_for_growth = np.random.randint(10, 10000)
+
+        # TODO: What's the tradeoff here? I guess I'm just keeping it random so I can see what a reasonable value is
         energy_cost_for_growth = np.random.randint(10, 10000)
         energy_gained_from_one_carbon_dioxide = 50
         energy_cost_per_frame = 1
@@ -36,15 +42,15 @@ def generate_random_seedling(num_segs: int, world_params, vicinity: (int, int) =
     if vicinity is None:
         x_translation = np.random.randint(min_x_or_y, max_x_or_y)
     else:
-        # TODO: Throw distance should cost energy because it allow parents and children not to interfere with each other
-        new_location_or_min_value = np.max([vicinity[0] + np.random.randint(-10, 10), min_x_or_y])
-        x_translation = np.min([new_location_or_min_value, max_x_or_y])
+        # TODO: Throw distance should cost energy because it allow parents and children not to interfere with each other. Maybe
+        new_location_x_or_min_value = np.max([vicinity[0] + np.random.randint(-throw_distance, throw_distance), min_x_or_y])
+        x_translation = np.min([new_location_x_or_min_value, max_x_or_y])
 
     if vicinity is None:
         y_translation = np.random.randint(5, max_x_or_y)
     else:
-        new_location_or_min_value = np.max([vicinity[1] + np.random.randint(-10, 10), min_x_or_y])
-        y_translation = np.min([new_location_or_min_value, max_x_or_y])
+        new_location_y_or_min_value = np.max([vicinity[1] + np.random.randint(-throw_distance, throw_distance), min_x_or_y])
+        y_translation = np.min([new_location_y_or_min_value, max_x_or_y])
 
     creature = {
         'c_id': int(world_params['global_creature_id_counter']),
