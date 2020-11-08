@@ -16,7 +16,7 @@ class RunSimulationTest(unittest.TestCase):
 
         template = lc.create_template(200, 200)
         smoothed_template = lc.add_smoothing_to_template(template)
-        land, water = lc.generate_land_and_water_from_template(smoothed_template, 0.5)
+        land, water = lc.generate_land_and_water_from_template(smoothed_template, 0.4)
         entire_surface = lc.entire_surface(land, water)
 
         world_params['land_array'] = land
