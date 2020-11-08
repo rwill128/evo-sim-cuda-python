@@ -14,7 +14,7 @@ class RunSimulationTest(unittest.TestCase):
         world_params['carbon_dioxide_map'] = np.full(shape=(world_params['world_size'], world_params['world_size']),
                                                      fill_value=0)
         pc.spawn_new_plants(world_params=world_params,
-                            num_plants=200)
+                            num_plants=500)
         pr.place_plants(world_params)
 
         rs.run_sim_for_x_steps(world_params, 10000)
