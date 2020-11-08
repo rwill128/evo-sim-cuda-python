@@ -6,6 +6,8 @@ import run_simulation.simulation as rs
 
 
 class RunSimulationTest(unittest.TestCase):
+
+    # TODO: Should really convert everything to numpy arrays, which I can access with constants in a dictionary-like way. This will improve performance a lot, allow numba use, and allow conversion to CUDA much more easily
     def test_run_simulation(self):
         world_params = {'world_size': 200,
                         'global_creature_id_counter': int(1)}
