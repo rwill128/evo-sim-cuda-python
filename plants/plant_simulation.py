@@ -18,7 +18,8 @@ def grow_plants(world_params):
                 plant['segments'][0][0] = PLANT_SEGMENT_DEAD
             else:
                 # Mark random segment dead
-                plant['segments'][np.random.randint(0, len(plant['segments']) - 1)][0] = PLANT_SEGMENT_DEAD
+                alive_segments = plant['segments'][np.where(plant['segments'][:, 0] != 0)]
+                alive_segments[np.random.randint(0, len(alive_segments))][0] = PLANT_SEGMENT_DEAD
 
             if np.count_nonzero(plant['segments'][:, 0]) == 0:
                 world_params['plants'].pop(index)
@@ -34,7 +35,7 @@ def grow_plants(world_params):
         if plant['energy'] > plant['energy_floor_for_growth'] and plant['age'] < plant['fertile_age']:
             plant['energy'] -= plant['energy_cost_for_growth']
             joined_seg = plant['segments'][
-                np.random.randint(0, len(plant['segments'] - 1))]  # TODO: Should only grow off of live segments
+                np.random.randint(0, len(plant['segments']))]  # TODO: Should only grow off of live segments
             new_seg = [
                 1,
                 joined_seg[3],

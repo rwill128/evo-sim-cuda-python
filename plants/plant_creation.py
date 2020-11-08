@@ -2,21 +2,24 @@ import numpy as np
 
 ALIVE_SEGMENT = 1
 
-def generate_random_seedling(num_segs: int, world_params, vicinity: (int, int) = None, parent_creature = None):
+
+def generate_random_seedling(num_segs: int, world_params, vicinity: (int, int) = None, parent_creature=None):
     max_x_or_y = world_params['world_size'] - 5
     min_x_or_y: int = 5
 
     if parent_creature is not None:
-        starting_energy = parent_creature['motherhood_cost']
         parent_creature['energy'] -= parent_creature['motherhood_cost']
+
+        starting_energy = parent_creature['motherhood_cost']
 
         fertile_age = parent_creature['fertile_age'] + np.random.randint(-1, 1)
         child_motherhood_cost = parent_creature['motherhood_cost'] + np.random.randint(-1, 1)
         throw_distance = parent_creature['throw_distance'] + np.random.randint(-1, 1)
-        energy_floor_for_growth = parent_creature['energy_floor_for_growth']
-        energy_cost_for_growth =  parent_creature['energy_cost_for_growth']
-        energy_gained_from_one_carbon_dioxide =  parent_creature['energy_gained_from_one_carbon_dioxide']
-        energy_cost_per_frame =  parent_creature['energy_cost_per_frame']
+        energy_floor_for_growth = parent_creature['energy_floor_for_growth'] + np.random.randint(-1, 1)
+        energy_cost_for_growth = parent_creature['energy_cost_for_growth'] + np.random.randint(-1, 1)
+        energy_gained_from_one_carbon_dioxide = parent_creature[
+                                                    'energy_gained_from_one_carbon_dioxide'] + np.random.randint(-1, 1)
+        energy_cost_per_frame = parent_creature['energy_cost_per_frame'] + np.random.randint(-1, 1)
 
         lineage = parent_creature['lineage'].copy()
         lineage.append(parent_creature['c_id'])
