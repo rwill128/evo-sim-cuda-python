@@ -7,7 +7,7 @@ import run_simulation.simulation as rs
 
 class RunSimulationTest(unittest.TestCase):
     def test_run_simulation(self):
-        world_params = {'world_size': 100,
+        world_params = {'world_size': 200,
                         'global_creature_id_counter': int(1)}
         world_params['world_array'] = np.zeros(shape=(world_params['world_size'], world_params['world_size']),
                                                dtype=int)
@@ -17,9 +17,7 @@ class RunSimulationTest(unittest.TestCase):
                             num_plants=500)
         pr.place_plants(world_params)
 
-        rs.run_sim_for_x_steps(world_params, 10000)
-
-        print(world_params['plants'])
+        rs.run_sim_for_x_steps(world_params, 1000000)
 
 
 if __name__ == '__main__':
