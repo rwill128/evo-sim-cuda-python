@@ -45,7 +45,5 @@ def run_sim_for_x_steps(world, steps):
         ps.grow_plants(world)
 
         # TODO: Draw the world every 1000 frames.
-        if i % 10000 == 0:
-            ar.render_array(world['world_array'], 'Plants')
-            # ar.render_array(world['carbon_dioxide_map'], 'Carbon Dioxide')
-            # pass
+        if i % 1000 == 0:
+            ar.display_world(world)
