@@ -4,33 +4,47 @@ import plants.plant_creation as pc
 import plants.plant_rendering as pr
 import run_simulation.simulation as rs
 import asset_generation.land_creation as lc
-import visualization.array_rendering as ar
+
+# World map array indices
+PLANT_LOCATION_ARRAY_INDEX = 0
+CARBON_DIOXIDE_ARRAY_INDEX = 1
+
+# World info array indices
+WORLD_SIZE_INDEX = 0
+PLANT_ID_COUNTER_INDEX = 1
 
 
 class RunSimulationTest(unittest.TestCase):
 
-    # TODO: Should really convert everything to numpy arrays, which I can access with constants in a dictionary-like way. This will improve performance a lot, allow numba use, and allow conversion to CUDA much more easily
     def test_run_simulation(self):
-        world_params = {'world_size': 200,
-                        'global_creature_id_counter': int(1)}
+        world_dictionary = self.create_world_dictionary()
+        world_info_array, world_map_array = self.create_world_array()
 
-        template = lc.create_template(200, 200)
-        smoothed_template = lc.add_smoothing_to_template(template)
-        land, water = lc.generate_land_and_water_from_template(smoothed_template, 0.4)
-        entire_surface = lc.entire_surface(land, water)
-
-        world_params['land_array'] = land
-        world_params['water_array'] = water
-
-        world_params['plant_location_array'] = np.zeros(shape=(world_params['world_size'], world_params['world_size']),
-                                               dtype=int)
-        world_params['carbon_dioxide_map'] = np.full(shape=(world_params['world_size'], world_params['world_size']),
-                                                     fill_value=0)
-        pc.spawn_new_plants(world_params=world_params,
+        pc.spawn_new_plants(world_dictionary=world_dictionary,
                             num_plants=500)
-        pr.place_plants(world_params)
+        pr.place_plants(world_dictionary)
 
-        rs.run_sim_for_x_steps(world_params, 10000)
+        rs.run_sim_for_x_steps(world_dictionary, 10000)
+
+    def create_world_dictionary(self):
+        world_dictionary = {'world_size': 200,
+                            'global_creature_id_counter': int(1)}
+        world_dictionary['plant_location_array'] = np.zeros(
+            shape=(world_dictionary['world_size'], world_dictionary['world_size']),
+            dtype=int)
+        world_dictionary['carbon_dioxide_map'] = np.full(
+            shape=(world_dictionary['world_size'], world_dictionary['world_size']),
+            fill_value=0)
+        return world_dictionary
+
+    def create_world_array(self):
+        world_info_array = np.array([200, 1])
+        world_map_array = [
+            np.zeros(shape=(world_info_array[WORLD_SIZE_INDEX], world_info_array[WORLD_SIZE_INDEX]), dtype=int),
+            np.zeros(shape=(world_info_array[WORLD_SIZE_INDEX], world_info_array[WORLD_SIZE_INDEX]), dtype=int)
+        ]
+
+        return world_info_array, world_map_array
 
 
 if __name__ == '__main__':

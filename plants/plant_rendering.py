@@ -24,7 +24,7 @@ def draw_plant(c_id: int, segments: np.array, x_translation: int, y_translation:
 
 
 # This could be heavily optimized for plants because the translations only need to be performed once, and can be stored.
-def place_plants(world_params):
+def place_plants(world_dictionary):
     for plant in world_params['plants']:
         draw_plant(plant['c_id'], plant['segments'], plant['x_translation'], plant['y_translation'],
                    world_params['plant_location_array'])

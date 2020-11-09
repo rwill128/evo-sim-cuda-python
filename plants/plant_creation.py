@@ -3,8 +3,8 @@ import numpy as np
 ALIVE_SEGMENT = 1
 
 
-def generate_random_seedling(num_segs: int, world_params, vicinity: (int, int) = None, parent_creature=None):
-    max_x_or_y = world_params['world_size'] - 5
+def generate_random_seedling(num_segs: int, world_dictionary, vicinity: (int, int) = None, parent_creature=None):
+    max_x_or_y = world_dictionary['world_size'] - 5
     min_x_or_y: int = 5
 
     if parent_creature is not None:
@@ -53,7 +53,7 @@ def generate_random_seedling(num_segs: int, world_params, vicinity: (int, int) =
         y_translation = np.min([new_location_y_or_min_value, max_x_or_y])
 
     creature = {
-        'c_id': int(world_params['global_creature_id_counter']),
+        'c_id': int(world_dictionary['global_creature_id_counter']),
         'x_translation': x_translation,
         'y_translation': y_translation,
         'energy': starting_energy,
@@ -70,7 +70,7 @@ def generate_random_seedling(num_segs: int, world_params, vicinity: (int, int) =
         'energy_cost_per_frame': energy_cost_per_frame
     }
 
-    world_params['global_creature_id_counter'] = world_params['global_creature_id_counter'] + 1
+    world_dictionary['global_creature_id_counter'] = world_dictionary['global_creature_id_counter'] + 1
 
     # Assign Id
     if num_segs > 1:
@@ -86,12 +86,12 @@ def generate_random_seedling(num_segs: int, world_params, vicinity: (int, int) =
     return creature, creature['c_id']
 
 
-def spawn_new_plants(world_params, num_plants: int = 1):
-    world_params['all_plants_dictionary'] = {}
-    world_params['plants'] = []
-    world_params['dead_plants'] = []
+def spawn_new_plants(world_dictionary, num_plants: int = 1):
+    world_dictionary['all_plants_dictionary'] = {}
+    world_dictionary['plants'] = []
+    world_dictionary['dead_plants'] = []
 
     for i in range(num_plants):
-        plant, creature_id = generate_random_seedling(1, world_params)
-        world_params['all_plants_dictionary'][creature_id] = plant
-        world_params['plants'].append(plant)
+        plant, creature_id = generate_random_seedling(1, world_dictionary)
+        world_dictionary['all_plants_dictionary'][creature_id] = plant
+        world_dictionary['plants'].append(plant)

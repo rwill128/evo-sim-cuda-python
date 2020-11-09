@@ -15,20 +15,20 @@ def render_array(l: np.ndarray, title):
     plt.close(fig1)
 
 
-def display_world(world_params):
+def display_world(world_dictionary):
     fig, axs = plt.subplots(2, 2)
 
     axs[0,0].title.set_text('Plant Locations')
-    axs[0,0].imshow(world_params['plant_location_array'], interpolation='nearest', cmap=cm.Greens)
+    axs[0,0].imshow(world_dictionary['plant_location_array'], interpolation='nearest', cmap=cm.Greens)
 
     axs[1,0].title.set_text("Carbon Dioxide")
-    axs[1,0].imshow(world_params['carbon_dioxide_map'], interpolation='nearest', cmap=cm.Greys)
+    axs[1,0].imshow(world_dictionary['carbon_dioxide_map'], interpolation='nearest', cmap=cm.Greys)
 
     axs[0,1].title.set_text("Land")
-    axs[0,1].imshow(world_params['land_array'], interpolation='nearest', cmap=cm.Oranges)
+    axs[0,1].imshow(world_dictionary['land_array'], interpolation='nearest', cmap=cm.Oranges)
 
     axs[1,1].title.set_text("Water")
-    axs[1,1].imshow(world_params['water_array'], interpolation='nearest', cmap=cm.Blues)
+    axs[1,1].imshow(world_dictionary['water_array'], interpolation='nearest', cmap=cm.Blues)
 
     fig.tight_layout()
     plt.show()
