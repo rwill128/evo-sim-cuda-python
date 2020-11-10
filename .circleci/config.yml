@@ -10,9 +10,13 @@ jobs:
       - checkout
       - python/install-packages
       - run:
+          name: Create temporary build artifacts directory
+          command: mkdir /build-artifacts
+      - run:
           name: Run Main Simulation
           command: pipenv run python run_simulation_test.py
       - store_artifacts:
+          name: Upload results
           path: /build-artifacts/world-results.png
 
 workflows:
