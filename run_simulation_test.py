@@ -6,6 +6,7 @@ import run_simulation.simulation as rs
 import asset_generation.land_creation as lc
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
+import os
 
 class RunSimulationTest(unittest.TestCase):
 
@@ -49,7 +50,7 @@ class RunSimulationTest(unittest.TestCase):
         fig.set_size_inches(10, 10)
         fig.tight_layout()
 
-        fig.savefig('/tmp/results.png', dpi=100)
+        fig.savefig(os.path.join(os.path.curdir, 'build-artifacts/world-results.png'), dpi=100)
         plt.close(fig)
 
 
