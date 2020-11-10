@@ -11,10 +11,12 @@ PLANT_SEGMENT_DEAD = 0
 
 
 @nb.jit(nopython=True, fastmath=True)
-def detect_occluded_squares(l: np.array, x_translation: int, y_translation: int, c_id: int, plant_location_array: np.array):
+def detect_occluded_squares(l: np.array, x_translation: int, y_translation: int, c_id: int,
+                            plant_location_array: np.array):
     x0, y0, x1, y1 = l
     plant_location_array[x0 + x_translation, y0 + y_translation] = c_id
     plant_location_array[x1 + x_translation, y1 + y_translation] = c_id
+
 
 @nb.jit(nopython=True, fastmath=True)
 def draw_plant(c_id: int, segments: np.array, x_translation: int, y_translation: int, plant_location_array: np.array):

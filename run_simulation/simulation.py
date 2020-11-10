@@ -47,3 +47,5 @@ def run_sim_for_x_steps(world, steps):
         # TODO: Draw the world every 1000 frames.
         if i % 1000 == 0:
             ar.save_drawing_of_world(world, i)
+            print('This is the total gas amount: ' + str(np.count_nonzero(world['carbon_dioxide_map'])))
+            print('This is the total surface area of plant life: ' + str(np.count_nonzero(world['plant_location_array'])))
