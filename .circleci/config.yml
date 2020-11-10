@@ -10,21 +10,11 @@ jobs:
       - checkout
       - python/install-packages
       - run:
-          command: pipenv run python run_simulation_test.py
           name: Run Main Simulation
+          command: pipenv run python run_simulation_test.py
       - run:
-          name: Creating Dummy Artifacts
-          command: |
-            echo "my artifact file" > /tmp/artifact-1;
-            mkdir /tmp/artifacts;
-            echo "my artifact files in a dir" > /tmp/artifacts/artifact-2;
+          name: Upload Final World Image
 
-            - store_artifacts:
-                path: /tmp/artifact-1
-                destination: artifact-file
-
-            - store_artifacts:
-                path: /tmp/artifacts
 
 workflows:
   main:

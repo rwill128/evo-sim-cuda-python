@@ -2,8 +2,6 @@ import numpy as np
 import plants.plant_rendering as pr
 import gases.gas_drift as gd
 import plants.plant_simulation as ps
-import visualization.array_rendering as ar
-
 
 def run_sim_for_x_steps(world, steps):
 
@@ -43,7 +41,3 @@ def run_sim_for_x_steps(world, steps):
         ps.photosynthesize(world)
         gd.move_gases(world['carbon_dioxide_map'], world['world_size'])
         ps.grow_plants(world)
-
-        # TODO: Draw the world every 1000 frames.
-        if i % 1000 == 0:
-            ar.display_world(world)
