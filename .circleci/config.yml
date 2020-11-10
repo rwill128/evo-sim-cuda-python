@@ -9,7 +9,7 @@ jobs:
     steps:
       - checkout
       - run:
-          command: ./run_simulation/run_simulation_test.py
+          command: python ./run_simulation/run_simulation_test.py
           name: Run Main Simulation
 
 workflows:
