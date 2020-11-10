@@ -14,6 +14,9 @@ Please inquire if you would like to contribute in any way.
 :segment maintenance cost implemented for plants
 :lifespan potentially?
 :at death, disappear or decompose?
+:better displays of plant data
+:charts of world stats over its lifetime for seeing when I've found sensible parameters
+:automated builds that run performance / parameter tests on a server?
 
 :seed cost gives the spawned plants more energy! 
     :so essentially each seed gets donated a certain amount of energy from parent plant
