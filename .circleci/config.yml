@@ -17,7 +17,7 @@ jobs:
           command: pipenv run python run_simulation_test.py
       - store_artifacts:
           name: Upload results
-          path: /tmp/build-artifacts/world-results.png
+          path: /tmp/build-artifacts
 
 workflows:
   main:
