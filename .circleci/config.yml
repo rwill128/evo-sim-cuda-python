@@ -12,8 +12,6 @@ jobs:
       - run:
           name: Run Main Simulation
           command: pipenv run python run_simulation_test.py
-      - run:
-          name: Upload Final World Image
 
 
 workflows:
