@@ -8,7 +8,6 @@ jobs:
     executor: python/default
     steps:
       - checkout
-      - python/install-deps
       - run:
           command: ./run_simulation/run_simulation_test.py
           name: Run Main Simulation
