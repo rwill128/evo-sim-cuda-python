@@ -8,12 +8,10 @@ jobs:
     executor: python/default
     steps:
       - checkout
-      - python/load-cache
       - python/install-deps
-      - python/save-cache
       - run:
-          command: ./manage.py test
-          name: Test
+          command: ./run_simulation/run_simulation_test.py
+          name: Run Main Simulation
 
 workflows:
   main:
