@@ -8,6 +8,9 @@ jobs:
     executor: python/default
     steps:
       - checkout
+      - python/load-cache
+      - python/install-deps
+      - python/save-cache
       - run:
           command: python ./run_simulation/run_simulation_test.py
           name: Run Main Simulation
