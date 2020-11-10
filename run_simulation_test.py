@@ -50,7 +50,7 @@ class RunSimulationTest(unittest.TestCase):
         fig.set_size_inches(10, 10)
         fig.tight_layout()
 
-        fig.savefig('\\tmp\\build-artifacts\\world-results.png', dpi=100)
+        fig.savefig('/tmp/build-artifacts/world-results.png', dpi=100)
         plt.close(fig)
 
 
