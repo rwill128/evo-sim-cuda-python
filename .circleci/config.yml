@@ -10,7 +10,7 @@ jobs:
       - checkout
       - python/install-packages
       - run:
-          command: pipenv run python ./run_simulation/run_simulation_test.py
+          command: pipenv run python run_simulation_test.py
           name: Run Main Simulation
 
 workflows:

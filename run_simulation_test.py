@@ -4,7 +4,6 @@ import plants.plant_creation as pc
 import plants.plant_rendering as pr
 import run_simulation.simulation as rs
 import asset_generation.land_creation as lc
-import visualization.array_rendering as ar
 
 
 class RunSimulationTest(unittest.TestCase):
