@@ -9,6 +9,7 @@ def grow_plants(world_params):
     for index, plant in enumerate(world_params['plants']):
         plant['age'] += 1
         if plant['energy'] > 0:
+            # TODO: each plant only loses one energy per frame no matter how many cells it has?
             plant['energy'] -= plant['energy_cost_per_frame']
 
         if plant['energy'] <= 0:

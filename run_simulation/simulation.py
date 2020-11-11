@@ -4,8 +4,6 @@ import gases.gas_drift as gd
 import plants.plant_simulation as ps
 import visualization.array_rendering as ar
 import matplotlib.pyplot as plt
-import matplotlib.cm as cm
-
 
 def run_sim_for_x_steps(world, steps):
     emitter1 = {
@@ -56,22 +54,36 @@ def run_sim_for_x_steps(world, steps):
             world['carbon_dioxide_amount_history']['time'].append(i)
             world['carbon_dioxide_amount_history']['carbon_dioxide_amount_history'].append(
                 np.count_nonzero(world['carbon_dioxide_map']))
+            world['rate_of_energy_consumption']['time'].append(i)
+            world['rate_of_energy_consumption']['rate_of_energy_consumption'].append(len(world['plants']))
 
         if i == steps - 1:
             # Print final stats image.
-            fig, axs = plt.subplots(1, 2)
+            fig, axs = plt.subplots(2, 2)
 
-            axs[0].plot(world['plant_surface_area_history']['time'],
+            axs[0, 0].plot(world['plant_surface_area_history']['time'],
                         world['plant_surface_area_history']['plant_surface_area_history'])
-            axs[0].set(xlabel='Time (i)', ylabel='Plant Surface Area',
+            axs[0, 0].set(xlabel='Time (i)', ylabel='Plant Surface Area',
                        title='Plant Surface Area')
-            axs[0].grid()
+            axs[0, 0].grid()
 
-            axs[1].plot(world['carbon_dioxide_amount_history']['time'],
+            axs[0, 1].plot(world['carbon_dioxide_amount_history']['time'],
                         world['carbon_dioxide_amount_history']['carbon_dioxide_amount_history'])
-            axs[1].set(xlabel='Time (i)', ylabel='Carbon Dioxide Amount',
+            axs[0, 1].set(xlabel='Time (i)', ylabel='Carbon Dioxide Amount',
                        title='Carbon Dioxide Amount')
-            axs[1].grid()
+            axs[0, 1].grid()
+
+            axs[1, 0].plot(world['rate_of_energy_consumption']['time'],
+                        world['rate_of_energy_consumption']['rate_of_energy_consumption'])
+            axs[1, 0].set(xlabel='Time (i)', ylabel='Burn rate of energy by plants',
+                       title='Rate of Energy Burn')
+            axs[1, 0].grid()
+
+            axs[1, 1].plot(world['carbon_dioxide_amount_history']['time'],
+                        [i * 50 for i in world['carbon_dioxide_amount_history']['carbon_dioxide_amount_history']])
+            axs[1, 1].set(xlabel='Time (i)', ylabel='Available Free Energy',
+                       title='Available Energy in System')
+            axs[1, 1].grid()
 
             fig.savefig("/tmp/build-artifacts/history.png")
             plt.close()
