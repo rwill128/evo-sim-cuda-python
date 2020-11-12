@@ -19,7 +19,7 @@ def generate_random_seedling(num_segs: int, world_params, vicinity: (int, int) =
         throw_distance = abs(parent_creature['throw_distance'] + np.random.randint(-1, 1))
         energy_floor_for_growth = abs(parent_creature['energy_floor_for_growth'] + np.random.randint(-1, 1))
         energy_cost_for_growth = abs(parent_creature['energy_cost_for_growth'] + np.random.randint(-1, 1))
-        energy_gained_from_one_carbon_dioxide = 50
+        energy_gained_from_one_carbon_dioxide = 100
         energy_cost_per_frame = 1
 
         lineage = parent_creature['lineage'].copy()

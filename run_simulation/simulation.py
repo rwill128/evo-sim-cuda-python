@@ -80,7 +80,7 @@ def run_sim_for_x_steps(world, steps):
             axs[1, 0].grid()
 
             axs[1, 1].plot(world['carbon_dioxide_amount_history']['time'],
-                        [i * 50 for i in world['carbon_dioxide_amount_history']['carbon_dioxide_amount_history']])
+                        [i * 100 for i in world['carbon_dioxide_amount_history']['carbon_dioxide_amount_history']])
             axs[1, 1].set(xlabel='Time (i)', ylabel='Available Free Energy',
                        title='Available Energy in System')
             axs[1, 1].grid()
