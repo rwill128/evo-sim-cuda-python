@@ -22,7 +22,7 @@ class RunSimulationTest(unittest.TestCase):
         world_params['water_array'] = water
         world_params['plant_surface_area_history'] = {'time': [], 'plant_surface_area_history': []}
         world_params['carbon_dioxide_amount_history'] = {'time': [], 'carbon_dioxide_amount_history': []}
-        world_params['rate_of_energy_consumption'] = {'time': [], 'rate_of_energy_consumption': []}
+        world_params['population'] = {'time': [], 'population': []}
 
         world_params['plant_location_array'] = np.zeros(shape=(world_params['world_size'], world_params['world_size']),
                                                         dtype=int)

@@ -55,11 +55,11 @@ def save_drawing_of_world(world_params, i):
 
     sizes = [p['num_alive_segments'] for p in world_params['plants']]
 
-    axs[2, 1].hist(sizes, bins=10)
+    axs[2, 1].hist(sizes, bins=10, )
 
     fig.set_size_inches(10, 10)
     fig.tight_layout()
 
-    fig.savefig('/tmp/build-artifacts/world-results' + '-' + str(i) + '.png', dpi=100)
-    # plt.show()
+    # fig.savefig('/tmp/build-artifacts/world-results' + '-' + str(i) + '.png', dpi=100)
+    plt.show()
     plt.close(fig)

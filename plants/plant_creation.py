@@ -67,7 +67,8 @@ def generate_random_seedling(num_segs: int, world_params, vicinity: (int, int) =
         'throw_distance': throw_distance,
         'energy_cost_for_growth': energy_cost_for_growth,
         'energy_gained_from_one_carbon_dioxide': energy_gained_from_one_carbon_dioxide,
-        'energy_cost_per_frame': energy_cost_per_frame
+        'energy_cost_per_frame': energy_cost_per_frame,
+        'num_alive_segments': 1
     }
 
     world_params['global_creature_id_counter'] = world_params['global_creature_id_counter'] + 1
