@@ -8,19 +8,16 @@ from plants.plant_rendering import PLANT_SEGMENT_DEAD
 def grow_plants(world_params):
     for index, plant in enumerate(world_params['plants']):
         plant['age'] += 1
+        alive_segment_indexes = np.where(plant['segments'][:, 0] != 0)
         if plant['energy'] > 0:
             # TODO: each plant only loses one energy per frame no matter how many cells it has?
-            plant['energy'] -= plant['energy_cost_per_frame']
-
+            plant['energy'] -= len(alive_segment_indexes[0])
         if plant['energy'] <= 0:
-
             if len(plant['segments']) == 1:
                 # Mark only segment dead
                 plant['segments'][0][0] = PLANT_SEGMENT_DEAD
             else:
                 # Mark random segment dead
-
-                alive_segment_indexes = np.where(plant['segments'][:, 0] != 0)
                 segment_to_kill_index = np.random.choice(alive_segment_indexes[0])
                 plant['segments'][segment_to_kill_index][0] = PLANT_SEGMENT_DEAD
 
@@ -29,7 +26,6 @@ def grow_plants(world_params):
                 world_params['dead_plants'].append(plant)
 
     new_growth = []
-
     for index, plant in enumerate(world_params['plants']):
         if plant['age'] > plant['fertile_age'] and plant['energy'] > plant['motherhood_cost']:
             seedling, seedling_id = generate_random_seedling(1, world_params, (plant['x_translation'], plant['y_translation']), plant)
