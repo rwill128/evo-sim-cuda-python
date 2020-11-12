@@ -13,12 +13,12 @@ def generate_random_seedling(num_segs: int, world_params, vicinity: (int, int) =
         starting_energy = parent_creature['motherhood_cost']
 
         # TODO: Add variability and heritability of mutation rate.
-        fertile_age = parent_creature['fertile_age'] + np.random.randint(-1, 1)
-        child_motherhood_cost = parent_creature['motherhood_cost'] + np.random.randint(-1, 1)
+        fertile_age = abs(parent_creature['fertile_age'] + np.random.randint(-1, 1))
+        child_motherhood_cost = abs(parent_creature['motherhood_cost'] + np.random.randint(-1, 1))
 
-        throw_distance = parent_creature['throw_distance'] + np.random.randint(-1, 1)
-        energy_floor_for_growth = parent_creature['energy_floor_for_growth'] + np.random.randint(-1, 1)
-        energy_cost_for_growth = parent_creature['energy_cost_for_growth'] + np.random.randint(-1, 1)
+        throw_distance = abs(parent_creature['throw_distance'] + np.random.randint(-1, 1))
+        energy_floor_for_growth = abs(parent_creature['energy_floor_for_growth'] + np.random.randint(-1, 1))
+        energy_cost_for_growth = abs(parent_creature['energy_cost_for_growth'] + np.random.randint(-1, 1))
         energy_gained_from_one_carbon_dioxide = 50
         energy_cost_per_frame = 1
 
