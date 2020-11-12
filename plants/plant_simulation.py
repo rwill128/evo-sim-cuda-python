@@ -21,7 +21,7 @@ def grow_plants(world_params):
                 segment_to_kill_index = np.random.choice(alive_segment_indexes[0])
                 plant['segments'][segment_to_kill_index][0] = PLANT_SEGMENT_DEAD
 
-            if np.count_nonzero(plant['segments'][:, 0]) == 0:
+            if len(np.where(plant['segments'][:, 0] != 0)[0]) == 0:
                 world_params['plants'].pop(index)
                 world_params['dead_plants'].append(plant)
 
