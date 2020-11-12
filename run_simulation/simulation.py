@@ -85,6 +85,8 @@ def run_sim_for_x_steps(world, steps):
                        title='Available Energy in System')
             axs[1, 1].grid()
 
+
+
             fig.set_size_inches(10, 10)
             fig.tight_layout()
             fig.savefig("/tmp/build-artifacts/history.png")

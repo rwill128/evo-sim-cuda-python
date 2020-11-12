@@ -8,17 +8,18 @@ from plants.plant_rendering import PLANT_SEGMENT_DEAD
 def grow_plants(world_params):
     for index, plant in enumerate(world_params['plants']):
         plant['age'] += 1
-        alive_segment_indexes = np.where(plant['segments'][:, 0] != 0)
+        one_tuple_that_has_alive_segment_indexes = np.where(plant['segments'][:, 0] != 0)
+        plant['num_alive_segments'] = len(one_tuple_that_has_alive_segment_indexes[0])
         if plant['energy'] > 0:
             # TODO: each plant only loses one energy per frame no matter how many cells it has?
-            plant['energy'] -= len(alive_segment_indexes[0])
+            plant['energy'] -= len(one_tuple_that_has_alive_segment_indexes[0])
         if plant['energy'] <= 0:
             if len(plant['segments']) == 1:
                 # Mark only segment dead
                 plant['segments'][0][0] = PLANT_SEGMENT_DEAD
             else:
                 # Mark random segment dead
-                segment_to_kill_index = np.random.choice(alive_segment_indexes[0])
+                segment_to_kill_index = np.random.choice(one_tuple_that_has_alive_segment_indexes[0])
                 plant['segments'][segment_to_kill_index][0] = PLANT_SEGMENT_DEAD
 
             if len(np.where(plant['segments'][:, 0] != 0)[0]) == 0:

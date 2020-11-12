@@ -35,7 +35,7 @@ def display_world(world_params):
 
 
 def save_drawing_of_world(world_params, i):
-    fig, axs = plt.subplots(2, 2)
+    fig, axs = plt.subplots(3, 2)
 
     axs[0, 0].title.set_text('Plant Locations')
     axs[0, 0].imshow(world_params['plant_location_array'], interpolation='nearest', cmap=cm.Greens)
@@ -48,6 +48,14 @@ def save_drawing_of_world(world_params, i):
 
     axs[1, 1].title.set_text("Water")
     axs[1, 1].imshow(world_params['water_array'], interpolation='nearest', cmap=cm.Blues)
+
+    ages = [p['age'] for p in world_params['plants']]
+
+    axs[2, 0].hist(ages, bins=10)
+
+    sizes = [p['num_alive_segments'] for p in world_params['plants']]
+
+    axs[2, 1].hist(sizes, bins=10)
 
     fig.set_size_inches(10, 10)
     fig.tight_layout()
