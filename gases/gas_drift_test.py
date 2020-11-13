@@ -1,10 +1,10 @@
 import unittest
 import numpy as np
-from scipy.sparse import csc_matrix
+import pandas
+import matplotlib.pyplot as plt
 
 import gases.gas_drift as gd
 import visualization.array_rendering as ar
-import scipy.sparse as sparse
 
 
 class GasDriftTest(unittest.TestCase):
@@ -27,6 +27,18 @@ class GasDriftTest(unittest.TestCase):
             gd.move_gases(world_params['carbon_dioxide_map'], world_params['world_size'])
 
         ar.render_array(world_params['carbon_dioxide_map'], 'Carbon Dioxide')
+
+    def test_pandas_gas_drift(self):
+        x_values = np.random.random_integers(0, 100, 200)
+        y_values = np.random.random_integers(0, 100, 200)
+        gas = pandas.DataFrame({'x': x_values, 'y': y_values})
+
+        gas.plot(x='x', y='y', kind='scatter')
+        plt.show()
+
+
+        gas.plot(x='x', y='y', kind='scatter')
+        plt.show()
 
 
 if __name__ == '__main__':

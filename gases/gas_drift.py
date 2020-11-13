@@ -1,5 +1,6 @@
 import numpy as np
 import numba as nb
+import pandas
 
 #TODO: Something is happening here to cause a bias for going down. So y decreasing is happening too often.
 @nb.jit(nopython=True, fastmath=True)
@@ -27,7 +28,6 @@ def move_gases(gas_map: np.array, world_size: int):
             i, j = possible_places_to_go[np.random.randint(0, len(possible_places_to_go))]
             gas_map[x][y] -= 1
             gas_map[i][j] += 1
-
 
 def emit_gases(world, emitters):
     for emitter in emitters:
