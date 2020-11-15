@@ -33,7 +33,6 @@ class RunSimulationTest(unittest.TestCase):
                             num_plants=500)
         pr.place_plants(world_params)
 
-
         rs.run_sim_for_x_steps(world_params, 10000)
 
 

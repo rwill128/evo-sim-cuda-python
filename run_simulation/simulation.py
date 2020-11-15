@@ -37,10 +37,10 @@ def run_sim_for_x_steps(world, steps):
     for i in range(steps):
         world['plant_location_array'] = np.zeros(shape=(world['world_size'], world['world_size']), dtype=int)
 
-        # gd.emit_gases(world, emitters)
+        gd.emit_gases(world, emitters)
 
-        if i % 201 == 0:
-            world['carbon_dioxide_map'] += 1
+        # if i % 201 == 0:
+        #     world['carbon_dioxide_map'] += 1
 
         pr.place_plants(world)
         ps.photosynthesize(world)
