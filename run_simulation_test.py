@@ -33,9 +33,8 @@ class RunSimulationTest(unittest.TestCase):
                             num_plants=500)
         pr.place_plants(world_params)
 
-        world_data_frame = pandas.DataFrame.from_dict(world_params, orient='index')
 
-        rs.run_sim_for_x_steps(world_data_frame, 50000)
+        rs.run_sim_for_x_steps(world_params, 10000)
 
 
 if __name__ == '__main__':

@@ -60,6 +60,6 @@ def save_drawing_of_world(world_params, i):
     fig.set_size_inches(10, 10)
     fig.tight_layout()
 
-    # fig.savefig('/tmp/build-artifacts/world-results' + '-' + str(i) + '.png', dpi=100)
-    plt.show()
+    fig.savefig('/tmp/build-artifacts/world-results' + '-' + str(i) + '.png', dpi=100)
+    # plt.show()
     plt.close(fig)
