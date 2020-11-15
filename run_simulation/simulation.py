@@ -91,6 +91,6 @@ def run_sim_for_x_steps(world, steps):
 
             fig.set_size_inches(10, 10)
             fig.tight_layout()
-            fig.savefig("/tmp/build-artifacts/history.png")
-            # plt.show()
+            # fig.savefig("/tmp/build-artifacts/history.png")
+            plt.show()
             plt.close()

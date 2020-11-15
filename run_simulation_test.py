@@ -4,6 +4,7 @@ import plants.plant_creation as pc
 import plants.plant_rendering as pr
 import run_simulation.simulation as rs
 import asset_generation.land_creation as lc
+import pandas
 
 
 class RunSimulationTest(unittest.TestCase):
@@ -32,7 +33,9 @@ class RunSimulationTest(unittest.TestCase):
                             num_plants=500)
         pr.place_plants(world_params)
 
-        rs.run_sim_for_x_steps(world_params, 50000)
+        world_data_frame = pandas.DataFrame.from_dict(world_params, orient='index')
+
+        rs.run_sim_for_x_steps(world_data_frame, 50000)
 
 
 if __name__ == '__main__':
