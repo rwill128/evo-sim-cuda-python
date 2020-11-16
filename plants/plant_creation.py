@@ -55,12 +55,13 @@ def generate_random_seedling(num_segs: int, world_params, vicinity: (int, int) =
         y_translation = np.min([new_location_y_or_min_value, max_x_or_y])
 
     plant_id = int(world_params['global_creature_id_counter'])
-    first_segment = [1, 0, 0, np.random.randint(-1, 1), np.random.randint(-1, 1)]
+    first_segment = [ALIVE_SEGMENT, 0, 0, np.random.choice([-1, 0, 1]), np.random.choice([-1, 0, 1])]
     detect_occluded_squares(l=first_segment[1:],
                             x_translation=x_translation,
                             y_translation=y_translation,
                             c_id=plant_id,
-                            plant_location_array=world_params['plant_location_array'])
+                            plant_location_array=world_params['plant_location_array'],
+                            occupied_squares=world_params['occupied_squares'])
 
     creature = {
         'c_id': plant_id,
@@ -83,17 +84,6 @@ def generate_random_seedling(num_segs: int, world_params, vicinity: (int, int) =
     }
 
     world_params['global_creature_id_counter'] = world_params['global_creature_id_counter'] + 1
-
-    # Assign Id
-    if num_segs > 1:
-        for i in range(1, num_segs):
-            creature['segments'][i] = [
-                ALIVE_SEGMENT,
-                creature['segments'][i - 1, 3],  # Starts off previous segment's endpoint
-                creature['segments'][i - 1, 4],
-                creature['segments'][i - 1, 3] + np.random.randint(-1, 1),  # Ends in a random place close by.
-                creature['segments'][i - 1, 4] + np.random.randint(-1, 1)]
-            # TODO: ^^ This is where gene-based growth patterns would be implemented
 
     return creature, creature['c_id']
 

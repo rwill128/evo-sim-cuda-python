@@ -19,8 +19,10 @@ def run_sim_for_x_steps(world_dict, world_array, steps):
 
     for i in range(steps):
         gd.emit_gases(world_dict, emitters)
-        ps.photosynthesize(world_dict['plant_location_array'], world_dict['carbon_dioxide_map'],
-                           world_dict['all_plants_dictionary'])
+        ps.photosynthesize(world_dict['plant_location_array'],
+                           world_dict['carbon_dioxide_map'],
+                           world_dict['all_plants_dictionary'],
+                           world_dict['occupied_squares'])
         gd.move_gases(world_dict['carbon_dioxide_map'], world_dict['world_size'])
         ps.grow_plants(world_dict)
 
