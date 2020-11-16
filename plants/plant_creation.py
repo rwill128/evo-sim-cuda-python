@@ -1,5 +1,7 @@
 import numpy as np
 
+from plants.plant_rendering import detect_occluded_squares
+
 ALIVE_SEGMENT = 1
 
 
@@ -52,12 +54,20 @@ def generate_random_seedling(num_segs: int, world_params, vicinity: (int, int) =
         new_location_y_or_min_value = np.max([vicinity[1] + np.random.randint(-throw_distance, throw_distance), min_x_or_y])
         y_translation = np.min([new_location_y_or_min_value, max_x_or_y])
 
+    plant_id = int(world_params['global_creature_id_counter'])
+    first_segment = [1, 0, 0, np.random.randint(-1, 1), np.random.randint(-1, 1)]
+    detect_occluded_squares(l=first_segment[1:],
+                            x_translation=x_translation,
+                            y_translation=y_translation,
+                            c_id=plant_id,
+                            plant_location_array=world_params['plant_location_array'])
+
     creature = {
-        'c_id': int(world_params['global_creature_id_counter']),
+        'c_id': plant_id,
         'x_translation': x_translation,
         'y_translation': y_translation,
         'energy': starting_energy,
-        'segments': np.array([[1, 0, 0, np.random.randint(-1, 1), np.random.randint(-1, 1)]]),
+        'segments': np.array([first_segment]),
         'dead_segments': [],
         'age': 0,
         'fertile_age': fertile_age,

@@ -1,9 +1,8 @@
 import numpy as np
-import plants.plant_rendering as pr
 import gases.gas_drift as gd
 import plants.plant_simulation as ps
 import visualization.array_rendering as ar
-import matplotlib.pyplot as plt
+
 
 def create_emitter(world):
     emitter = {
@@ -16,15 +15,14 @@ def create_emitter(world):
 
 
 def run_sim_for_x_steps(world_dict, world_array, steps):
-
-    emitters = [create_emitter(world_dict) for emitter in range(400)]
+    emitters = [create_emitter(world_dict) for emitter in range(4)]
 
     for i in range(steps):
-        world_dict['plant_location_array'] = np.zeros(shape=(world_dict['world_size'], world_dict['world_size']), dtype=int)
-
         gd.emit_gases(world_dict, emitters)
-
-        pr.place_plants(world_dict)
-        ps.photosynthesize(world_dict)
+        ps.photosynthesize(world_dict['plant_location_array'], world_dict['carbon_dioxide_map'],
+                           world_dict['all_plants_dictionary'])
         gd.move_gases(world_dict['carbon_dioxide_map'], world_dict['world_size'])
         ps.grow_plants(world_dict)
+
+        if i % 100 == 0:
+            ar.save_drawing_of_world(world_params=world_dict, i=i)
