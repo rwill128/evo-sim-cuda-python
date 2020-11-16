@@ -15,12 +15,11 @@ def create_emitter(world):
 
 
 def run_sim_for_x_steps(world_dict, world_array, steps):
-    emitters = [create_emitter(world_dict) for emitter in range(4)]
+    emitters = [create_emitter(world_dict) for i in range(4)]
 
     for i in range(steps):
         gd.emit_gases(world_dict, emitters)
-        ps.photosynthesize(world_dict['plant_location_array'],
-                           world_dict['carbon_dioxide_map'],
+        ps.photosynthesize(world_dict['carbon_dioxide_map'],
                            world_dict['all_plants_dictionary'],
                            world_dict['occupied_squares'])
         gd.move_gases(world_dict['carbon_dioxide_map'], world_dict['world_size'])

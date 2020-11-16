@@ -72,17 +72,9 @@ def grow_plants(world_params):
                                                               0)
 
 
-def photosynthesize(plant_location_array, carbon_dioxide_map, all_plants_dictionary, occupied_squares):
+def photosynthesize(carbon_dioxide_map, all_plants_dictionary, occupied_squares):
     for x, y, c_id in occupied_squares:
         if carbon_dioxide_map[x][y] > 0:
             carbon_dioxide_map[x][y] -= 1
-            all_plants_dictionary[pull_plant_id_from_world(plant_location_array, x, y)][
-                'energy'] += all_plants_dictionary[pull_plant_id_from_world(plant_location_array, x, y)]['energy_gained_from_one_carbon_dioxide']
-
-
-def get_occupied_squares(plant_location_array: np.array):
-    return np.nonzero(plant_location_array)
-
-
-def pull_plant_id_from_world(plant_location_array, x, y):
-    return plant_location_array[x][y]
+            all_plants_dictionary[c_id][
+                'energy'] += all_plants_dictionary[c_id]['energy_gained_from_one_carbon_dioxide']
