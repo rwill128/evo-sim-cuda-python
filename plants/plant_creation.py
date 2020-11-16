@@ -31,7 +31,7 @@ def generate_random_seedling(num_segs: int, world_params, vicinity: (int, int) =
         child_motherhood_cost = np.random.randint(10, 10000)
         lineage = []
         fertile_age = np.random.randint(10, 10000)
-        throw_distance = np.random.randint(10, 10000)
+        throw_distance = np.abs(np.random.randint(10, 10000))
         energy_floor_for_growth = np.random.randint(10, 10000)
 
         # TODO: What's the tradeoff here? I guess I'm just keeping it random so I can see what a reasonable value is
@@ -43,7 +43,7 @@ def generate_random_seedling(num_segs: int, world_params, vicinity: (int, int) =
         x_translation = np.random.randint(min_x_or_y, max_x_or_y)
     else:
         # TODO: Throw distance should cost energy because it allow parents and children not to interfere with each other. Maybe
-        new_location_x_or_min_value = np.max([vicinity[0] + np.random.randint(-throw_distance, throw_distance), min_x_or_y])
+        new_location_x_or_min_value = np.max([vicinity[0] + np.random.randint(-throw_distance, np.abs(throw_distance)), min_x_or_y])
         x_translation = np.min([new_location_x_or_min_value, max_x_or_y])
 
     if vicinity is None:
@@ -58,6 +58,7 @@ def generate_random_seedling(num_segs: int, world_params, vicinity: (int, int) =
         'y_translation': y_translation,
         'energy': starting_energy,
         'segments': np.array([[1, 0, 0, np.random.randint(-1, 1), np.random.randint(-1, 1)]]),
+        'dead_segments': [],
         'age': 0,
         'fertile_age': fertile_age,
         'alive': True,

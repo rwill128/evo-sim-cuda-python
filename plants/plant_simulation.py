@@ -8,21 +8,26 @@ from plants.plant_rendering import PLANT_SEGMENT_DEAD
 def grow_plants(world_params):
     for index, plant in enumerate(world_params['plants']):
         plant['age'] += 1
-        one_tuple_that_has_alive_segment_indexes = np.where(plant['segments'][:, 0] != 0)
-        plant['num_alive_segments'] = len(one_tuple_that_has_alive_segment_indexes[0])
+        plant['num_alive_segments'] = len(plant['segments'])
         if plant['energy'] > 0:
             # TODO: each plant only loses one energy per frame no matter how many cells it has?
-            plant['energy'] -= len(one_tuple_that_has_alive_segment_indexes[0])
+            plant['energy'] -= len(plant['segments'])
         if plant['energy'] <= 0:
             if len(plant['segments']) == 1:
                 # Mark only segment dead
-                plant['segments'][0][0] = PLANT_SEGMENT_DEAD
+                only_segment = plant['segments'][0]
+                only_segment[0] = PLANT_SEGMENT_DEAD
+                plant['segments'] = np.delete(plant['segments'], 0, 0)
+                plant['dead_segments'].append(only_segment)
             else:
                 # Mark random segment dead
-                segment_to_kill_index = np.random.choice(one_tuple_that_has_alive_segment_indexes[0])
-                plant['segments'][segment_to_kill_index][0] = PLANT_SEGMENT_DEAD
+                segment_to_kill_index = np.random.randint(0, len(plant['segments']))
+                segment_to_kill = plant['segments'][segment_to_kill_index]
+                segment_to_kill[0] = PLANT_SEGMENT_DEAD
+                plant['segments'] = np.delete(plant['segments'], segment_to_kill_index, 0)
+                plant['dead_segments'].append(segment_to_kill)
 
-            if len(np.where(plant['segments'][:, 0] != 0)[0]) == 0:
+            if len(plant['segments']) == 0:
                 world_params['plants'].pop(index)
                 world_params['dead_plants'].append(plant)
 

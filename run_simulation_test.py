@@ -4,17 +4,18 @@ import plants.plant_creation as pc
 import plants.plant_rendering as pr
 import run_simulation.simulation as rs
 import asset_generation.land_creation as lc
-import pandas
+
 
 
 class RunSimulationTest(unittest.TestCase):
 
     # TODO: Should really convert everything to numpy arrays, which I can access with constants in a dictionary-like way. This will improve performance a lot, allow numba use, and allow conversion to CUDA much more easily
     def test_run_simulation(self):
-        world_params = {'world_size': 200,
+        world_params = {'world_size': 2000,
                         'global_creature_id_counter': int(1)}
+        world_array = [2000, 1]
 
-        template = lc.create_template(200, 200)
+        template = lc.create_template(world_params['world_size'], world_params['world_size'])
         smoothed_template = lc.add_smoothing_to_template(template)
         land, water = lc.generate_land_and_water_from_template(smoothed_template, 0.4)
         entire_surface = lc.entire_surface(land, water)
@@ -30,10 +31,12 @@ class RunSimulationTest(unittest.TestCase):
         world_params['carbon_dioxide_map'] = np.full(shape=(world_params['world_size'], world_params['world_size']),
                                                      fill_value=0)
         pc.spawn_new_plants(world_params=world_params,
-                            num_plants=500)
+                            num_plants=50000)
         pr.place_plants(world_params)
 
-        rs.run_sim_for_x_steps(world_params, 100000)
+        rs.run_sim_for_x_steps(world_dict=world_params, world_array=world_array, steps=50)
+
+        pass
 
 
 if __name__ == '__main__':
