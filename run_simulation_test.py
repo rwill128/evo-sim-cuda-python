@@ -11,9 +11,9 @@ class RunSimulationTest(unittest.TestCase):
 
     # TODO: Should really convert everything to numpy arrays, which I can access with constants in a dictionary-like way. This will improve performance a lot, allow numba use, and allow conversion to CUDA much more easily
     def test_run_simulation(self):
-        world_params = {'world_size': 2000,
-                        'global_creature_id_counter': int(1)}
-        world_array = [2000, 1]
+        world_params = {'world_size': 200,
+                        'global_creature_id_counter': int(0)}
+        world_array = [200, 1]
 
         template = lc.create_template(world_params['world_size'], world_params['world_size'])
         smoothed_template = lc.add_smoothing_to_template(template)
@@ -32,9 +32,9 @@ class RunSimulationTest(unittest.TestCase):
         world_params['carbon_dioxide_map'] = np.full(shape=(world_params['world_size'], world_params['world_size']), fill_value=0)
 
         pc.spawn_new_plants(world_params=world_params,
-                            num_plants=50000)
+                            num_plants=500)
 
-        rs.run_sim_for_x_steps(world_dict=world_params, world_array=world_array, steps=100)
+        rs.run_sim_for_x_steps(world_dict=world_params, world_array=world_array, steps=1000)
 
         pass
 

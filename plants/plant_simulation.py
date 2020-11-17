@@ -40,12 +40,23 @@ def grow_plants(world_params):
 
             if len(plant['segments']) == 0:
                 world_params['plants'].pop(index)
+
+                world_params['alive_plant_ids'] = np.delete(world_params['alive_plant_ids'], index, 0)
+                world_params['alive_plant_x_translation'] = np.delete(world_params['alive_plant_x_translation'], index,
+                                                                      0)
+                world_params['alive_plant_y_translation'] = np.delete(world_params['alive_plant_y_translation'], index,
+                                                                      0)
+                world_params['alive_plant_energy'] = np.delete(world_params['alive_plant_energy'], index, 0)
+                world_params['alive_plant_ages'] = np.delete(world_params['alive_plant_ages'], index, 0)
+                world_params['alive_plant_fertile_ages'] = np.delete(world_params['alive_plant_fertile_ages'], index, 0)
+
                 world_params['dead_plants'].append(plant)
 
     new_growth = []
     for index, plant in enumerate(world_params['plants']):
         if plant['age'] > plant['fertile_age'] and plant['energy'] > plant['motherhood_cost']:
-            seedling, seedling_id = generate_random_seedling(1, world_params, (plant['x_translation'], plant['y_translation']), plant)
+            seedling, seedling_id = generate_random_seedling(1, world_params,
+                                                             (plant['x_translation'], plant['y_translation']), plant)
             world_params['all_plants_dictionary'][seedling_id] = seedling
             world_params['plants'].append(seedling)
         if plant['energy'] > plant['energy_floor_for_growth'] and plant['age'] < plant['fertile_age']:

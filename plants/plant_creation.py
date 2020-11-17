@@ -45,13 +45,15 @@ def generate_random_seedling(num_segs: int, world_params, vicinity: (int, int) =
         x_translation = np.random.randint(min_x_or_y, max_x_or_y)
     else:
         # TODO: Throw distance should cost energy because it allow parents and children not to interfere with each other. Maybe
-        new_location_x_or_min_value = np.max([vicinity[0] + np.random.randint(-throw_distance, np.abs(throw_distance)), min_x_or_y])
+        new_location_x_or_min_value = np.max(
+            [vicinity[0] + np.random.randint(-throw_distance, np.abs(throw_distance)), min_x_or_y])
         x_translation = np.min([new_location_x_or_min_value, max_x_or_y])
 
     if vicinity is None:
         y_translation = np.random.randint(5, max_x_or_y)
     else:
-        new_location_y_or_min_value = np.max([vicinity[1] + np.random.randint(-throw_distance, throw_distance), min_x_or_y])
+        new_location_y_or_min_value = np.max(
+            [vicinity[1] + np.random.randint(-throw_distance, throw_distance), min_x_or_y])
         y_translation = np.min([new_location_y_or_min_value, max_x_or_y])
 
     plant_id = int(world_params['global_creature_id_counter'])
@@ -85,6 +87,13 @@ def generate_random_seedling(num_segs: int, world_params, vicinity: (int, int) =
 
     world_params['global_creature_id_counter'] = world_params['global_creature_id_counter'] + 1
 
+    world_params['alive_plant_ids'] = np.append(world_params['alive_plant_ids'], plant_id)
+    world_params['alive_plant_x_translation'] = np.append(world_params['alive_plant_x_translation'], x_translation)
+    world_params['alive_plant_y_translation'] = np.append(world_params['alive_plant_y_translation'], y_translation)
+    world_params['alive_plant_energy'] = np.append(world_params['alive_plant_energy'], starting_energy)
+    world_params['alive_plant_ages'] = np.append(world_params['alive_plant_ages'], 0)
+    world_params['alive_plant_fertile_ages'] = np.append(world_params['alive_plant_fertile_ages'], fertile_age)
+
     return creature, creature['c_id']
 
 
@@ -92,6 +101,12 @@ def spawn_new_plants(world_params, num_plants: int = 1):
     world_params['all_plants_dictionary'] = {}
     world_params['plants'] = []
     world_params['dead_plants'] = []
+    world_params['alive_plant_ids'] = np.array([])
+    world_params['alive_plant_x_translation'] = np.array([])
+    world_params['alive_plant_y_translation'] = np.array([])
+    world_params['alive_plant_energy'] = np.array([])
+    world_params['alive_plant_ages'] = np.array([])
+    world_params['alive_plant_fertile_ages'] = np.array([])
 
     for i in range(num_plants):
         plant, creature_id = generate_random_seedling(1, world_params)
