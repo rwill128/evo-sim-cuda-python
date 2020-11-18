@@ -5,7 +5,7 @@ from plants.plant_rendering import detect_occluded_squares
 ALIVE_SEGMENT = 1
 
 
-def generate_random_seedling(num_segs: int, world_params, vicinity: (int, int) = None, parent_creature=None):
+def generate_random_seedling(num_segs: int, world_params, vicinity: (int, int) = None, parent_creature = None, parent_index: int = None):
     max_x_or_y = world_params['world_size'] - 5
     min_x_or_y: int = 5
 
@@ -15,7 +15,7 @@ def generate_random_seedling(num_segs: int, world_params, vicinity: (int, int) =
         starting_energy = parent_creature['motherhood_cost']
 
         # TODO: Add variability and heritability of mutation rate.
-        fertile_age = abs(parent_creature['fertile_age'] + np.random.randint(-1, 1))
+        fertile_age = abs(world_params['alive_plant_fertile_ages'][parent_index] + np.random.randint(-1, 1))
         child_motherhood_cost = abs(parent_creature['motherhood_cost'] + np.random.randint(-1, 1))
 
         throw_distance = abs(parent_creature['throw_distance'] + np.random.randint(-1, 1))
@@ -73,7 +73,6 @@ def generate_random_seedling(num_segs: int, world_params, vicinity: (int, int) =
         'segments': np.array([first_segment]),
         'dead_segments': [],
         'age': 0,
-        'fertile_age': fertile_age,
         'alive': True,
         'motherhood_cost': child_motherhood_cost,
         'lineage': lineage,
@@ -82,17 +81,22 @@ def generate_random_seedling(num_segs: int, world_params, vicinity: (int, int) =
         'energy_cost_for_growth': energy_cost_for_growth,
         'energy_gained_from_one_carbon_dioxide': energy_gained_from_one_carbon_dioxide,
         'energy_cost_per_frame': energy_cost_per_frame,
-        'num_alive_segments': 1
+        'num_alive_segments': 1,
+        'place_in_list': len(world_params['plants'])
     }
-
-    world_params['global_creature_id_counter'] = world_params['global_creature_id_counter'] + 1
 
     world_params['alive_plant_ids'] = np.append(world_params['alive_plant_ids'], plant_id)
     world_params['alive_plant_x_translation'] = np.append(world_params['alive_plant_x_translation'], x_translation)
     world_params['alive_plant_y_translation'] = np.append(world_params['alive_plant_y_translation'], y_translation)
     world_params['alive_plant_energy'] = np.append(world_params['alive_plant_energy'], starting_energy)
-    world_params['alive_plant_ages'] = np.append(world_params['alive_plant_ages'], 0)
+
+    # Conversion partially accomplished
+
+    # Conversion fully accomplished
     world_params['alive_plant_fertile_ages'] = np.append(world_params['alive_plant_fertile_ages'], fertile_age)
+    world_params['alive_plant_ages'] = np.append(world_params['alive_plant_ages'], 0)
+
+    world_params['global_creature_id_counter'] = world_params['global_creature_id_counter'] + 1
 
     return creature, creature['c_id']
 

@@ -5,11 +5,12 @@ from plants.plant_rendering import PLANT_SEGMENT_DEAD, detect_occluded_squares, 
 
 
 def grow_plants(world_params):
+
+    world_params['alive_plant_ages'] += 1
+
     for index, plant in enumerate(world_params['plants']):
-        plant['age'] += 1
         plant['num_alive_segments'] = len(plant['segments'])
         if plant['energy'] > 0:
-            # TODO: each plant only loses one energy per frame no matter how many cells it has?
             plant['energy'] -= len(plant['segments'])
         if plant['energy'] <= 0:
             if len(plant['segments']) == 1:
@@ -52,14 +53,16 @@ def grow_plants(world_params):
 
                 world_params['dead_plants'].append(plant)
 
+
+
     new_growth = []
     for index, plant in enumerate(world_params['plants']):
-        if plant['age'] > plant['fertile_age'] and plant['energy'] > plant['motherhood_cost']:
+        if world_params['alive_plant_ages'][index] > world_params['alive_plant_fertile_ages'][index] and plant['energy'] > plant['motherhood_cost']:
             seedling, seedling_id = generate_random_seedling(1, world_params,
-                                                             (plant['x_translation'], plant['y_translation']), plant)
+                                                             (plant['x_translation'], plant['y_translation']), plant, index)
             world_params['all_plants_dictionary'][seedling_id] = seedling
             world_params['plants'].append(seedling)
-        if plant['energy'] > plant['energy_floor_for_growth'] and plant['age'] < plant['fertile_age']:
+        if plant['energy'] > plant['energy_floor_for_growth'] and world_params['alive_plant_ages'][index] < world_params['alive_plant_fertile_ages'][index]:
             plant['energy'] -= plant['energy_cost_for_growth']
             joined_seg = plant['segments'][
                 np.random.randint(0, len(plant['segments']))]  # TODO: Should only grow off of live segments
