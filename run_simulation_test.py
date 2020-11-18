@@ -1,7 +1,6 @@
 import unittest
 import numpy as np
 import plants.plant_creation as pc
-import plants.plant_rendering as pr
 import run_simulation.simulation as rs
 import asset_generation.land_creation as lc
 

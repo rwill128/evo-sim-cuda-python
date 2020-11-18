@@ -43,13 +43,15 @@ def grow_plants(world_params):
                 world_params['plants'].pop(index)
 
                 world_params['alive_plant_ids'] = np.delete(world_params['alive_plant_ids'], index, 0)
-                world_params['alive_plant_x_translation'] = np.delete(world_params['alive_plant_x_translation'], index,
-                                                                      0)
-                world_params['alive_plant_y_translation'] = np.delete(world_params['alive_plant_y_translation'], index,
-                                                                      0)
+                world_params['alive_plant_x_translation'] = np.delete(world_params['alive_plant_x_translation'], index, 0)
+                world_params['alive_plant_y_translation'] = np.delete(world_params['alive_plant_y_translation'], index, 0)
                 world_params['alive_plant_energy'] = np.delete(world_params['alive_plant_energy'], index, 0)
                 world_params['alive_plant_ages'] = np.delete(world_params['alive_plant_ages'], index, 0)
                 world_params['alive_plant_fertile_ages'] = np.delete(world_params['alive_plant_fertile_ages'], index, 0)
+                world_params['alive_plant_energy_gained_from_one_carbon_dioxide'] = np.delete(world_params['alive_plant_energy_gained_from_one_carbon_dioxide'], index, 0)
+                world_params['energy_cost_for_growth'] = np.delete(world_params['energy_cost_for_growth'], index, 0)
+                world_params['throw_distance'] = np.delete(world_params['throw_distance'], index, 0)
+                world_params['energy_floor_for_growth'] = np.delete(world_params['energy_floor_for_growth'], index, 0)
 
                 world_params['dead_plants'].append(plant)
 
@@ -62,8 +64,8 @@ def grow_plants(world_params):
                                                              (plant['x_translation'], plant['y_translation']), plant, index)
             world_params['all_plants_dictionary'][seedling_id] = seedling
             world_params['plants'].append(seedling)
-        if world_params['alive_plant_energy'][index] > plant['energy_floor_for_growth'] and world_params['alive_plant_ages'][index] < world_params['alive_plant_fertile_ages'][index]:
-            world_params['alive_plant_energy'][index] -= plant['energy_cost_for_growth']
+        if world_params['alive_plant_energy'][index] > world_params['energy_floor_for_growth'][index] and world_params['alive_plant_ages'][index] < world_params['alive_plant_fertile_ages'][index]:
+            world_params['alive_plant_energy'][index] -= world_params['energy_cost_for_growth'][index]
             joined_seg = plant['segments'][
                 np.random.randint(0, len(plant['segments']))]  # TODO: Should only grow off of live segments
             new_seg = [
