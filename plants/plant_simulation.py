@@ -10,9 +10,9 @@ def grow_plants(world_params):
 
     for index, plant in enumerate(world_params['plants']):
         plant['num_alive_segments'] = len(plant['segments'])
-        if plant['energy'] > 0:
-            plant['energy'] -= len(plant['segments'])
-        if plant['energy'] <= 0:
+        if world_params['alive_plant_energy'][index] > 0:
+            world_params['alive_plant_energy'][index] -= len(plant['segments'])
+        if world_params['alive_plant_energy'][index] <= 0:
             if len(plant['segments']) == 1:
                 # Mark only segment dead
                 only_segment = plant['segments'][0]
@@ -57,13 +57,13 @@ def grow_plants(world_params):
 
     new_growth = []
     for index, plant in enumerate(world_params['plants']):
-        if world_params['alive_plant_ages'][index] > world_params['alive_plant_fertile_ages'][index] and plant['energy'] > plant['motherhood_cost']:
+        if world_params['alive_plant_ages'][index] > world_params['alive_plant_fertile_ages'][index] and world_params['alive_plant_energy'][index] > plant['motherhood_cost']:
             seedling, seedling_id = generate_random_seedling(1, world_params,
                                                              (plant['x_translation'], plant['y_translation']), plant, index)
             world_params['all_plants_dictionary'][seedling_id] = seedling
             world_params['plants'].append(seedling)
-        if plant['energy'] > plant['energy_floor_for_growth'] and world_params['alive_plant_ages'][index] < world_params['alive_plant_fertile_ages'][index]:
-            plant['energy'] -= plant['energy_cost_for_growth']
+        if world_params['alive_plant_energy'][index] > plant['energy_floor_for_growth'] and world_params['alive_plant_ages'][index] < world_params['alive_plant_fertile_ages'][index]:
+            world_params['alive_plant_energy'][index] -= plant['energy_cost_for_growth']
             joined_seg = plant['segments'][
                 np.random.randint(0, len(plant['segments']))]  # TODO: Should only grow off of live segments
             new_seg = [
@@ -86,9 +86,9 @@ def grow_plants(world_params):
                                                               0)
 
 
-def photosynthesize(carbon_dioxide_map, all_plants_dictionary, occupied_squares):
+def photosynthesize(carbon_dioxide_map, all_plants_dictionary, occupied_squares, plant_ids, plant_energies, energy_gained_from_one_carbon_dioxide_values):
     for x, y, c_id in occupied_squares:
         if carbon_dioxide_map[x][y] > 0:
             carbon_dioxide_map[x][y] -= 1
-            all_plants_dictionary[c_id][
-                'energy'] += all_plants_dictionary[c_id]['energy_gained_from_one_carbon_dioxide']
+            plant_index = np.where(plant_ids == c_id)[0][0]
+            plant_energies[plant_index] += energy_gained_from_one_carbon_dioxide_values[plant_index]

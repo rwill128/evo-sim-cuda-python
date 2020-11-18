@@ -21,7 +21,11 @@ def run_sim_for_x_steps(world_dict, world_array, steps):
         gd.emit_gases(world_dict, emitters)
         ps.photosynthesize(world_dict['carbon_dioxide_map'],
                            world_dict['all_plants_dictionary'],
-                           world_dict['occupied_squares'])
+                           world_dict['occupied_squares'],
+                           world_dict['alive_plant_ids'],
+                           world_dict['alive_plant_energy'],
+                           world_dict['alive_plant_energy_gained_from_one_carbon_dioxide']
+                           )
         gd.move_gases(world_dict['carbon_dioxide_map'], world_dict['world_size'])
         ps.grow_plants(world_dict)
 
