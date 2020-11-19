@@ -21,7 +21,8 @@ def generate_random_seedling(world_params, vicinity: (int, int) = None, parent_c
         throw_distance = abs(world_params['throw_distance'][parent_index] + np.random.randint(-1, 1))
         energy_floor_for_growth = abs(world_params['energy_floor_for_growth'][parent_index] + np.random.randint(-1, 1))
         energy_cost_for_growth = abs(world_params['energy_cost_for_growth'][parent_index] + np.random.randint(-1, 1))
-        energy_gained_from_one_carbon_dioxide = abs(world_params['alive_plant_energy_gained_from_one_carbon_dioxide'][parent_index] + np.random.randint(-1, 1))
+        energy_gained_from_one_carbon_dioxide = abs(
+            world_params['alive_plant_energy_gained_from_one_carbon_dioxide'][parent_index] + np.random.randint(-1, 1))
         energy_cost_per_frame = abs(world_params['energy_cost_per_frame'][parent_index] + np.random.randint(-1, 1))
 
         lineage = parent_creature['lineage'].copy()
@@ -78,15 +79,18 @@ def generate_random_seedling(world_params, vicinity: (int, int) = None, parent_c
     world_params['alive_plant_energy'] = np.append(world_params['alive_plant_energy'], starting_energy)
     world_params['alive_plant_fertile_ages'] = np.append(world_params['alive_plant_fertile_ages'], fertile_age)
     world_params['alive_plant_ages'] = np.append(world_params['alive_plant_ages'], int(0))
-    world_params['alive_plant_energy_gained_from_one_carbon_dioxide'] = np.append(world_params['alive_plant_energy_gained_from_one_carbon_dioxide'], energy_gained_from_one_carbon_dioxide)
+    world_params['alive_plant_energy_gained_from_one_carbon_dioxide'] = np.append(
+        world_params['alive_plant_energy_gained_from_one_carbon_dioxide'], energy_gained_from_one_carbon_dioxide)
     world_params['energy_cost_for_growth'] = np.append(world_params['energy_cost_for_growth'], energy_cost_for_growth)
     world_params['throw_distance'] = np.append(world_params['throw_distance'], throw_distance)
-    world_params['energy_floor_for_growth'] = np.append(world_params['energy_floor_for_growth'], energy_floor_for_growth)
+    world_params['energy_floor_for_growth'] = np.append(world_params['energy_floor_for_growth'],
+                                                        energy_floor_for_growth)
     world_params['energy_cost_per_frame'] = np.append(world_params['energy_cost_per_frame'], energy_cost_per_frame)
     world_params['motherhood_cost'] = np.append(world_params['motherhood_cost'], child_motherhood_cost)
     world_params['num_alive_segments'] = np.append(world_params['num_alive_segments'], int(1))
     world_params['x_translation'] = np.append(world_params['x_translation'], x_translation)
     world_params['y_translation'] = np.append(world_params['y_translation'], y_translation)
+    world_params['segments'] = np.append(world_params['segments'], np.array([first_segment]), 0)
 
     world_params['global_creature_id_counter'] = world_params['global_creature_id_counter'] + 1
 
@@ -111,6 +115,7 @@ def spawn_new_plants(world_params, num_plants: int = 1):
     world_params['num_alive_segments'] = np.array([], dtype=int)
     world_params['x_translation'] = np.array([], dtype=int)
     world_params['y_translation'] = np.array([], dtype=int)
+    world_params['segments'] = np.empty(shape=(0, 5))
 
     for i in range(num_plants):
         plant, creature_id = generate_random_seedling(world_params)

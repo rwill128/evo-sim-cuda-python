@@ -1,16 +1,8 @@
-from typing import Callable
-
 import numpy as np
-import numba as nb
-
-# TODO: This can be made simpler for plants that are using only ints of length 1. It's just a grid, or it should be
-# Probably some or most of this code can be used for animals though.
-from numba import prange
 
 PLANT_SEGMENT_DEAD = 0
 
 
-# @nb.jit(nopython=True, fastmath=True)
 def detect_occluded_squares(l: np.array,
                             x_translation: int,
                             y_translation: int,
@@ -32,7 +24,6 @@ def detect_occluded_squares(l: np.array,
     occupied_squares.add((os2x, os2y, c_id))
 
 
-# @nb.jit(nopython=True, fastmath=True)
 def clear_occluded_square(l: np.array,
                           x_translation: int,
                           y_translation: int,

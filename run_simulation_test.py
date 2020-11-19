@@ -30,7 +30,7 @@ class RunSimulationTest(unittest.TestCase):
         pc.spawn_new_plants(world_params=world_params,
                             num_plants=5000)
 
-        rs.run_sim_for_x_steps(world_dict=world_params, steps=50000)
+        rs.run_sim_for_x_steps(world_dict=world_params, steps=5000)
 
         pass
 
