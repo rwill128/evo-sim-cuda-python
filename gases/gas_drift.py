@@ -1,33 +1,79 @@
 import numpy as np
-import numba as nb
-import pandas
+from numba import types, jit, njit
+from numba.core.errors import TypingError
+from numba.extending import overload
 
-#TODO: Something is happening here to cause a bias for going down. So y decreasing is happening too often.
-@nb.jit(nopython=True, fastmath=True)
-def move_gases(gas_map: np.array, world_size: int):
+
+@overload(np.clip)
+def impl_clip(a, a_min, a_max):
+    # Check that `a_min` and `a_max` are scalars, and at most one of them is None.
+    if not isinstance(a_min, (types.Integer, types.Float, types.NoneType)):
+        raise TypingError("a_min must be a_min scalar int/float")
+    if not isinstance(a_max, (types.Integer, types.Float, types.NoneType)):
+        raise TypingError("a_max must be a_min scalar int/float")
+    if isinstance(a_min, types.NoneType) and isinstance(a_max, types.NoneType):
+        raise TypingError("a_min and a_max can't both be None")
+
+    if isinstance(a, (types.Integer, types.Float)):
+        # `a` is a scalar with a valid type
+        if isinstance(a_min, types.NoneType):
+            # `a_min` is None
+            def impl(a, a_min, a_max):
+                return min(a, a_max)
+        elif isinstance(a_max, types.NoneType):
+            # `a_max` is None
+            def impl(a, a_min, a_max):
+                return max(a, a_min)
+        else:
+            # neither `a_min` or `a_max` are None
+            def impl(a, a_min, a_max):
+                return min(max(a, a_min), a_max)
+    elif (
+            isinstance(a, types.Array) and
+            a.ndim == 1 and
+            isinstance(a.dtype, (types.Integer, types.Float))
+    ):
+        # `a` is a 1D array of the proper type
+        def impl(a, a_min, a_max):
+            # Allocate an output array using standard numpy functions
+            out = np.empty_like(a)
+            # Iterate over `a`, calling `np.clip` on every element
+            for i in range(a.size):
+                # This will dispatch to the proper scalar implementation (as
+                # defined above) at *compile time*. There should have no
+                # overhead at runtime.
+                out[i] = np.clip(a[i], a_min, a_max)
+            return out
+    else:
+        raise TypingError("`a` must be an int/float or a 1D array of ints/floats")
+
+    # The call to `np.clip` has arguments with valid types, return our
+    # numba-compatible implementation
+    return impl
+
+
+def move_gases(gas_map: np.array):
+    gas_filled_squares = get_non_zero(gas_map)
+    x_movement = np.random.randint(-1, 2, len(gas_filled_squares[0]))
+    y_movement = np.random.randint(-1, 2, len(gas_filled_squares[1]))
+
+    random_nearby_xs, random_nearby_ys = find_nearby(gas_filled_squares, gas_map, x_movement, y_movement)
+
+    gas_map[gas_filled_squares[0], gas_filled_squares[1]] -= 1
+    gas_map[random_nearby_xs, random_nearby_ys] += 1
+
+@jit(nopython=True)
+def get_non_zero(gas_map):
     gas_filled_squares = np.nonzero(gas_map)
-    for parallel_index in range(len(gas_filled_squares[0])):
-        x = gas_filled_squares[0][parallel_index]
-        y = gas_filled_squares[1][parallel_index]
-        possible_places_to_go = []
-        gas_value = gas_map[x][y]
+    return gas_filled_squares
 
-        if x > 0 and gas_map[x - 1][y] < gas_value:
-            possible_places_to_go.append((x - 1, y))
 
-        if x < world_size - 1 and gas_map[x + 1][y] < gas_value:
-            possible_places_to_go.append((x + 1, y))
+@jit(nopython=True)
+def find_nearby(gas_filled_squares, gas_map, x_movement, y_movement):
+    random_nearby_xs = np.clip(gas_filled_squares[0] - x_movement, 0, len(gas_map) - 1)
+    random_nearby_ys = np.clip(gas_filled_squares[1] - y_movement, 0, len(gas_map) - 1)
+    return random_nearby_xs, random_nearby_ys
 
-        if y > 0 and gas_map[x][y - 1] < gas_value:
-            possible_places_to_go.append((x, y - 1))
-
-        if y < world_size - 1 and gas_map[x][y + 1] < gas_value:
-            possible_places_to_go.append((x, y + 1))
-
-        if len(possible_places_to_go) > 0:
-            i, j = possible_places_to_go[np.random.randint(0, len(possible_places_to_go))]
-            gas_map[x][y] -= 1
-            gas_map[i][j] += 1
 
 def emit_gases(world, emitters):
     for emitter in emitters:
@@ -40,7 +86,7 @@ def emit_gases(world, emitters):
             emitter['y'] = np.random.randint(5, world['world_size'] - 5)
 
         if emitter['x'] < 5 and emitter['vx'] < 0:
-            emitter['vx'] = -emitter['vx']        
+            emitter['vx'] = -emitter['vx']
         if emitter['y'] < 5 and emitter['vy'] < 0:
             emitter['vy'] = -emitter['vy']
 

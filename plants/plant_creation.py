@@ -11,19 +11,19 @@ def generate_random_seedling(num_segs: int, world_params, vicinity: (int, int) =
     min_x_or_y: int = 5
 
     if parent_creature is not None:
-        world_params['alive_plant_energy'][parent_index] -= parent_creature['motherhood_cost']
+        world_params['alive_plant_energy'][parent_index] -= world_params['motherhood_cost'][parent_index]
 
-        starting_energy = parent_creature['motherhood_cost']
+        starting_energy = world_params['motherhood_cost'][parent_index]
 
         # TODO: Add variability and heritability of mutation rate.
         fertile_age = abs(world_params['alive_plant_fertile_ages'][parent_index] + np.random.randint(-1, 1))
-        child_motherhood_cost = abs(parent_creature['motherhood_cost'] + np.random.randint(-1, 1))
+        child_motherhood_cost = abs(world_params['motherhood_cost'][parent_index] + np.random.randint(-1, 1))
 
         throw_distance = abs(world_params['throw_distance'][parent_index] + np.random.randint(-1, 1))
-        energy_floor_for_growth = abs(parent_creature['energy_floor_for_growth'] + np.random.randint(-1, 1))
+        energy_floor_for_growth = abs(world_params['energy_floor_for_growth'][parent_index] + np.random.randint(-1, 1))
         energy_cost_for_growth = abs(world_params['energy_cost_for_growth'][parent_index] + np.random.randint(-1, 1))
-        energy_gained_from_one_carbon_dioxide = 200
-        energy_cost_per_frame = 1
+        energy_gained_from_one_carbon_dioxide = abs(world_params['alive_plant_energy_gained_from_one_carbon_dioxide'][parent_index] + np.random.randint(-1, 1))
+        energy_cost_per_frame = abs(world_params['energy_cost_per_frame'][parent_index] + np.random.randint(-1, 1))
 
         lineage = parent_creature['lineage'].copy()
         lineage.append(parent_creature['c_id'])
@@ -39,8 +39,8 @@ def generate_random_seedling(num_segs: int, world_params, vicinity: (int, int) =
 
         # TODO: What's the tradeoff here? I guess I'm just keeping it random so I can see what a reasonable value is
         energy_cost_for_growth = np.random.randint(10, 10000)
-        energy_gained_from_one_carbon_dioxide = 200
-        energy_cost_per_frame = 1
+        energy_gained_from_one_carbon_dioxide = np.random.randint(1, 500)
+        energy_cost_per_frame = np.random.randint(1, 100)
 
     if vicinity is None:
         x_translation = np.random.randint(min_x_or_y, max_x_or_y)
@@ -72,12 +72,8 @@ def generate_random_seedling(num_segs: int, world_params, vicinity: (int, int) =
         'y_translation': y_translation,
         'segments': np.array([first_segment]),
         'dead_segments': [],
-        'age': 0,
         'alive': True,
-        'motherhood_cost': child_motherhood_cost,
         'lineage': lineage,
-        'energy_floor_for_growth': energy_floor_for_growth,
-        'energy_cost_per_frame': energy_cost_per_frame,
         'num_alive_segments': 1,
     }
 
@@ -95,6 +91,8 @@ def generate_random_seedling(num_segs: int, world_params, vicinity: (int, int) =
     world_params['energy_cost_for_growth'] = np.append(world_params['energy_cost_for_growth'], energy_cost_for_growth)
     world_params['throw_distance'] = np.append(world_params['throw_distance'], throw_distance)
     world_params['energy_floor_for_growth'] = np.append(world_params['energy_floor_for_growth'], energy_floor_for_growth)
+    world_params['energy_cost_per_frame'] = np.append(world_params['energy_cost_per_frame'], energy_cost_per_frame)
+    world_params['motherhood_cost'] = np.append(world_params['motherhood_cost'], child_motherhood_cost)
 
     world_params['global_creature_id_counter'] = world_params['global_creature_id_counter'] + 1
 
@@ -116,6 +114,8 @@ def spawn_new_plants(world_params, num_plants: int = 1):
     world_params['energy_cost_for_growth'] = np.array([])
     world_params['throw_distance'] = np.array([])
     world_params['energy_floor_for_growth'] = np.array([])
+    world_params['energy_cost_per_frame'] = np.array([])
+    world_params['motherhood_cost'] = np.array([])
 
     for i in range(num_plants):
         plant, creature_id = generate_random_seedling(1, world_params)

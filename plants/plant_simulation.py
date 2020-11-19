@@ -9,9 +9,8 @@ def grow_plants(world_params):
     world_params['alive_plant_ages'] += 1
 
     for index, plant in enumerate(world_params['plants']):
-        plant['num_alive_segments'] = len(plant['segments'])
         if world_params['alive_plant_energy'][index] > 0:
-            world_params['alive_plant_energy'][index] -= len(plant['segments'])
+            world_params['alive_plant_energy'][index] -= int(len(plant['segments']) * world_params['energy_cost_per_frame'][index])
         if world_params['alive_plant_energy'][index] <= 0:
             if len(plant['segments']) == 1:
                 # Mark only segment dead
@@ -52,6 +51,8 @@ def grow_plants(world_params):
                 world_params['energy_cost_for_growth'] = np.delete(world_params['energy_cost_for_growth'], index, 0)
                 world_params['throw_distance'] = np.delete(world_params['throw_distance'], index, 0)
                 world_params['energy_floor_for_growth'] = np.delete(world_params['energy_floor_for_growth'], index, 0)
+                world_params['energy_cost_per_frame'] = np.delete(world_params['energy_cost_per_frame'], index, 0)
+                world_params['motherhood_cost'] = np.delete(world_params['motherhood_cost'], index, 0)
 
                 world_params['dead_plants'].append(plant)
 
@@ -59,7 +60,7 @@ def grow_plants(world_params):
 
     new_growth = []
     for index, plant in enumerate(world_params['plants']):
-        if world_params['alive_plant_ages'][index] > world_params['alive_plant_fertile_ages'][index] and world_params['alive_plant_energy'][index] > plant['motherhood_cost']:
+        if world_params['alive_plant_ages'][index] > world_params['alive_plant_fertile_ages'][index] and world_params['alive_plant_energy'][index] > world_params['motherhood_cost'][index]:
             seedling, seedling_id = generate_random_seedling(1, world_params,
                                                              (plant['x_translation'], plant['y_translation']), plant, index)
             world_params['all_plants_dictionary'][seedling_id] = seedling
@@ -88,7 +89,7 @@ def grow_plants(world_params):
                                                               0)
 
 
-def photosynthesize(carbon_dioxide_map, all_plants_dictionary, occupied_squares, plant_ids, plant_energies, energy_gained_from_one_carbon_dioxide_values):
+def photosynthesize(carbon_dioxide_map, occupied_squares, plant_ids, plant_energies, energy_gained_from_one_carbon_dioxide_values):
     for x, y, c_id in occupied_squares:
         if carbon_dioxide_map[x][y] > 0:
             carbon_dioxide_map[x][y] -= 1
