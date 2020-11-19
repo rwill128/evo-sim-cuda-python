@@ -13,8 +13,8 @@ def grow_plants(world_params):
                 # Mark only segment dead
                 only_segment = plant['segments'][0]
                 clear_occluded_square(l=only_segment[1:],
-                                      x_translation=plant['x_translation'],
-                                      y_translation=plant['y_translation'],
+                                      x_translation=world_params['x_translation'][index],
+                                      y_translation=world_params['y_translation'][index],
                                       c_id=plant['c_id'],
                                       plant_location_array=world_params['plant_location_array'],
                                       occupied_squares=world_params['occupied_squares'])
@@ -27,8 +27,8 @@ def grow_plants(world_params):
                 segment_to_kill_index = np.random.randint(0, world_params['num_alive_segments'][index])
                 segment_to_kill = plant['segments'][segment_to_kill_index]
                 clear_occluded_square(l=segment_to_kill[1:],
-                                      x_translation=plant['x_translation'],
-                                      y_translation=plant['y_translation'],
+                                      x_translation=world_params['x_translation'][index],
+                                      y_translation=world_params['y_translation'][index],
                                       c_id=plant['c_id'],
                                       plant_location_array=world_params['plant_location_array'],
                                       occupied_squares=world_params['occupied_squares'])
@@ -41,8 +41,6 @@ def grow_plants(world_params):
                 world_params['plants'].pop(index)
 
                 world_params['alive_plant_ids'] = np.delete(world_params['alive_plant_ids'], index, 0)
-                world_params['alive_plant_x_translation'] = np.delete(world_params['alive_plant_x_translation'], index, 0)
-                world_params['alive_plant_y_translation'] = np.delete(world_params['alive_plant_y_translation'], index, 0)
                 world_params['alive_plant_energy'] = np.delete(world_params['alive_plant_energy'], index, 0)
                 world_params['alive_plant_ages'] = np.delete(world_params['alive_plant_ages'], index, 0)
                 world_params['alive_plant_fertile_ages'] = np.delete(world_params['alive_plant_fertile_ages'], index, 0)
@@ -53,13 +51,15 @@ def grow_plants(world_params):
                 world_params['energy_cost_per_frame'] = np.delete(world_params['energy_cost_per_frame'], index, 0)
                 world_params['motherhood_cost'] = np.delete(world_params['motherhood_cost'], index, 0)
                 world_params['num_alive_segments'] = np.delete(world_params['num_alive_segments'], index, 0)
+                world_params['x_translation'] = np.delete(world_params['x_translation'], index, 0)
+                world_params['y_translation'] = np.delete(world_params['y_translation'], index, 0)
 
                 world_params['dead_plants'].append(plant)
 
     new_growth = []
     for index, plant in enumerate(world_params['plants']):
         if world_params['alive_plant_ages'][index] > world_params['alive_plant_fertile_ages'][index] and world_params['alive_plant_energy'][index] > world_params['motherhood_cost'][index]:
-            seedling, seedling_id = generate_random_seedling(1, world_params, (plant['x_translation'], plant['y_translation']), plant, index)
+            seedling, seedling_id = generate_random_seedling(1, world_params, (world_params['x_translation'][index], world_params['y_translation'][index]), plant, index)
             world_params['all_plants_dictionary'][seedling_id] = seedling
             world_params['plants'].append(seedling)
         if world_params['alive_plant_energy'][index] > world_params['energy_floor_for_growth'][index] and world_params['alive_plant_ages'][index] < world_params['alive_plant_fertile_ages'][index]:
@@ -72,8 +72,8 @@ def grow_plants(world_params):
                 joined_seg[3] + np.random.choice([-1, 0, 1]),
                 joined_seg[4] + np.random.choice([-1, 0, 1])]
             detect_occluded_squares(l=joined_seg[1:],
-                                    x_translation=plant['x_translation'],
-                                    y_translation=plant['y_translation'],
+                                    x_translation=world_params['x_translation'][index],
+                                    y_translation=world_params['y_translation'][index],
                                     c_id=plant['c_id'],
                                     plant_location_array=world_params['plant_location_array'],
                                     occupied_squares=world_params['occupied_squares'])

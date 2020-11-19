@@ -14,7 +14,7 @@ def create_emitter(world):
     return emitter
 
 
-def run_sim_for_x_steps(world_dict, world_array, steps):
+def run_sim_for_x_steps(world_dict, steps):
     emitters = [create_emitter(world_dict) for i in range(8)]
 
     for i in range(steps):
