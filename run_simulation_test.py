@@ -20,15 +20,12 @@ class RunSimulationTest(unittest.TestCase):
         world_params['carbon_dioxide_amount_history'] = {'time': [], 'carbon_dioxide_amount_history': []}
         world_params['population'] = {'time': [], 'population': []}
 
-        world_params['plant_location_array'] = np.zeros(shape=(world_params['world_size'], world_params['world_size']),
-                                                        dtype=int)
+        world_params['plant_location_array'] = np.zeros(shape=(world_params['world_size'], world_params['world_size']), dtype=int)
         world_params['occupied_squares'] = set()
 
-        world_params['carbon_dioxide_map'] = np.full(shape=(world_params['world_size'], world_params['world_size']),
-                                                     fill_value=0)
+        world_params['carbon_dioxide_map'] = np.full(shape=(world_params['world_size'], world_params['world_size']), fill_value=0)
 
-        pc.spawn_new_plants(world_params=world_params,
-                            num_plants=5000)
+        pc.spawn_new_plants(world_params=world_params, num_plants=5000)
 
         rs.run_sim_for_x_steps(world_dict=world_params, steps=5000)
 
