@@ -15,7 +15,7 @@ def grow_plants(world_params):
                 clear_occluded_square(l=only_segment[1:],
                                       x_translation=world_params['x_translation'][index],
                                       y_translation=world_params['y_translation'][index],
-                                      c_id=plant['c_id'],
+                                      c_id=world_params['alive_plant_ids'][index],
                                       plant_location_array=world_params['plant_location_array'],
                                       occupied_squares=world_params['occupied_squares'])
                 only_segment[0] = PLANT_SEGMENT_DEAD
@@ -29,7 +29,7 @@ def grow_plants(world_params):
                 clear_occluded_square(l=segment_to_kill[1:],
                                       x_translation=world_params['x_translation'][index],
                                       y_translation=world_params['y_translation'][index],
-                                      c_id=plant['c_id'],
+                                      c_id=world_params['alive_plant_ids'][index],
                                       plant_location_array=world_params['plant_location_array'],
                                       occupied_squares=world_params['occupied_squares'])
                 segment_to_kill[0] = PLANT_SEGMENT_DEAD
@@ -59,7 +59,7 @@ def grow_plants(world_params):
     new_growth = []
     for index, plant in enumerate(world_params['plants']):
         if world_params['alive_plant_ages'][index] > world_params['alive_plant_fertile_ages'][index] and world_params['alive_plant_energy'][index] > world_params['motherhood_cost'][index]:
-            seedling, seedling_id = generate_random_seedling(1, world_params, (world_params['x_translation'][index], world_params['y_translation'][index]), plant, index)
+            seedling, seedling_id = generate_random_seedling(world_params, (world_params['x_translation'][index], world_params['y_translation'][index]), plant, index)
             world_params['all_plants_dictionary'][seedling_id] = seedling
             world_params['plants'].append(seedling)
         if world_params['alive_plant_energy'][index] > world_params['energy_floor_for_growth'][index] and world_params['alive_plant_ages'][index] < world_params['alive_plant_fertile_ages'][index]:
@@ -74,7 +74,7 @@ def grow_plants(world_params):
             detect_occluded_squares(l=joined_seg[1:],
                                     x_translation=world_params['x_translation'][index],
                                     y_translation=world_params['y_translation'][index],
-                                    c_id=plant['c_id'],
+                                    c_id=world_params['alive_plant_ids'][index],
                                     plant_location_array=world_params['plant_location_array'],
                                     occupied_squares=world_params['occupied_squares'])
             new_growth.append((index, new_seg))

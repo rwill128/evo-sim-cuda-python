@@ -5,8 +5,7 @@ from plants.plant_rendering import detect_occluded_squares
 ALIVE_SEGMENT = 1
 
 
-def generate_random_seedling(num_segs: int, world_params, vicinity: (int, int) = None, parent_creature=None,
-                             parent_index: int = None):
+def generate_random_seedling(world_params, vicinity: (int, int) = None, parent_creature=None, parent_index: int = None):
     max_x_or_y = world_params['world_size'] - 5
     min_x_or_y: int = 5
 
@@ -26,7 +25,7 @@ def generate_random_seedling(num_segs: int, world_params, vicinity: (int, int) =
         energy_cost_per_frame = abs(world_params['energy_cost_per_frame'][parent_index] + np.random.randint(-1, 1))
 
         lineage = parent_creature['lineage'].copy()
-        lineage.append(parent_creature['c_id'])
+        lineage.append(world_params['alive_plant_ids'][parent_index])
     else:
         starting_energy = 1000
 
@@ -67,17 +66,15 @@ def generate_random_seedling(num_segs: int, world_params, vicinity: (int, int) =
                             occupied_squares=world_params['occupied_squares'])
 
     creature = {
-        'c_id': plant_id,
         'segments': np.array([first_segment]),
         'dead_segments': [],
-        'alive': True,
         'lineage': lineage,
     }
 
     # Conversion partially accomplished
-    world_params['alive_plant_ids'] = np.append(world_params['alive_plant_ids'], plant_id)
 
     # Conversion fully accomplished
+    world_params['alive_plant_ids'] = np.append(world_params['alive_plant_ids'], plant_id)
     world_params['alive_plant_energy'] = np.append(world_params['alive_plant_energy'], starting_energy)
     world_params['alive_plant_fertile_ages'] = np.append(world_params['alive_plant_fertile_ages'], fertile_age)
     world_params['alive_plant_ages'] = np.append(world_params['alive_plant_ages'], int(0))
@@ -93,7 +90,7 @@ def generate_random_seedling(num_segs: int, world_params, vicinity: (int, int) =
 
     world_params['global_creature_id_counter'] = world_params['global_creature_id_counter'] + 1
 
-    return creature, creature['c_id']
+    return creature, plant_id
 
 
 def spawn_new_plants(world_params, num_plants: int = 1):
@@ -116,6 +113,6 @@ def spawn_new_plants(world_params, num_plants: int = 1):
     world_params['y_translation'] = np.array([], dtype=int)
 
     for i in range(num_plants):
-        plant, creature_id = generate_random_seedling(1, world_params)
+        plant, creature_id = generate_random_seedling(world_params)
         world_params['all_plants_dictionary'][creature_id] = plant
         world_params['plants'].append(plant)
