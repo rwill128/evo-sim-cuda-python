@@ -5,11 +5,11 @@ from plants.plant_rendering import detect_occluded_squares
 ALIVE_SEGMENT = 1
 
 
-def generate_random_seedling(world_params, vicinity: (int, int) = None, parent_creature=None, parent_index: int = None):
+def generate_random_seedling(world_params, vicinity: (int, int) = None, parent_index: int = None):
 	max_x_or_y = world_params['world_size'] - 5
 	min_x_or_y: int = 5
 
-	if parent_creature is not None:
+	if parent_index is not None:
 		world_params['alive_plant_energy'][parent_index] -= world_params['motherhood_cost'][parent_index]
 
 		starting_energy = world_params['motherhood_cost'][parent_index]
@@ -24,8 +24,8 @@ def generate_random_seedling(world_params, vicinity: (int, int) = None, parent_c
 		energy_gained_from_one_carbon_dioxide = abs(world_params['alive_plant_energy_gained_from_one_carbon_dioxide'][parent_index] + np.random.randint(-1, 1))
 		energy_cost_per_frame = abs(world_params['energy_cost_per_frame'][parent_index] + np.random.randint(-1, 1))
 
-		lineage = parent_creature['lineage'].copy()
-		lineage.append(world_params['alive_plant_ids'][parent_index])
+		# lineage = parent_creature['lineage'].copy()
+		# lineage.append(world_params['alive_plant_ids'][parent_index])
 	else:
 		starting_energy = 1000
 
@@ -66,7 +66,7 @@ def generate_random_seedling(world_params, vicinity: (int, int) = None, parent_c
 	creature = {
 			'segments'     : np.array([first_segment]),
 			'dead_segments': [],
-			'lineage'      : lineage,
+			# 'lineage'      : lineage,
 	}
 
 	# Conversion partially accomplished
