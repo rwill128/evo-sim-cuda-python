@@ -52,7 +52,7 @@ def add_new_growth(index, new_growth, plant, world_params):
 								y_translation=world_params['y_translation'][index],
 								c_id=world_params['alive_plant_ids'][index],
 								plant_location_array=world_params['plant_location_array'],
-								occupied_squares=world_params['occupied_squares'])
+								world_params=world_params)
 		new_growth.append((index, new_seg))
 
 
@@ -67,7 +67,7 @@ def kill_segments(index, world_params):
 								  y_translation=world_params['y_translation'][index],
 								  c_id=world_params['alive_plant_ids'][index],
 								  plant_location_array=world_params['plant_location_array'],
-								  occupied_squares=world_params['occupied_squares'])
+								  world_params=world_params)
 			only_segment[0] = PLANT_SEGMENT_DEAD
 			plant['segments'] = np.delete(plant['segments'], 0, 0)
 			plant['dead_segments'].append(only_segment)
@@ -81,7 +81,7 @@ def kill_segments(index, world_params):
 								  y_translation=world_params['y_translation'][index],
 								  c_id=world_params['alive_plant_ids'][index],
 								  plant_location_array=world_params['plant_location_array'],
-								  occupied_squares=world_params['occupied_squares'])
+								  world_params=world_params)
 			segment_to_kill[0] = PLANT_SEGMENT_DEAD
 			plant['segments'] = np.delete(plant['segments'], segment_to_kill_index, 0)
 			plant['dead_segments'].append(segment_to_kill)
@@ -115,10 +115,12 @@ def vectorized_kill_plants(world_params):
 		del world_params['plants'][index]
 
 
-def photosynthesize(carbon_dioxide_map, occupied_squares, plant_ids, plant_energies,
-					energy_gained_from_one_carbon_dioxide_values):
-	for x, y, c_id in occupied_squares:
-		if carbon_dioxide_map[x][y] > 0:
-			carbon_dioxide_map[x][y] -= 1
-			plant_index = np.where(plant_ids == c_id)[0][0]
-			plant_energies[plant_index] += energy_gained_from_one_carbon_dioxide_values[plant_index]
+def photosynthesize(carbon_dioxide_map, plant_ids, plant_energies, energy_gained_from_one_carbon_dioxide_values, world_params):
+	indexes_where_carbon_exists = np.nonzero(world_params['carbon_dioxide_map'])
+	indexes_where_plants_exists = np.nonzero(world_params['plant_location_array'])
+	plant_ids = world_params['plant_location_array'][indexes_where_plants_exists]
+	plants_that_will_get_carbon = world_params['plant_location_array'][indexes_where_carbon_exists]
+
+
+
+	pass

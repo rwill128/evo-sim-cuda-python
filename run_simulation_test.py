@@ -21,7 +21,9 @@ class RunSimulationTest(unittest.TestCase):
         world_params['population'] = {'time': [], 'population': []}
 
         world_params['plant_location_array'] = np.zeros(shape=(world_params['world_size'], world_params['world_size']), dtype=int)
-        world_params['occupied_squares'] = set()
+        world_params['occupied_squares_x'] = np.array([], dtype=int)
+        world_params['occupied_squares_y'] = np.array([], dtype=int)
+        world_params['occupied_squares_plant_id'] = np.array([], dtype=int)
 
         world_params['carbon_dioxide_map'] = np.full(shape=(world_params['world_size'], world_params['world_size']), fill_value=0)
 

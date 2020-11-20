@@ -61,7 +61,7 @@ def generate_random_seedling(world_params, vicinity: (int, int) = None, parent_i
 							y_translation=y_translation,
 							c_id=plant_id,
 							plant_location_array=world_params['plant_location_array'],
-							occupied_squares=world_params['occupied_squares'])
+							world_params=world_params)
 
 	creature = {
 			'segments'     : np.array([first_segment]),
