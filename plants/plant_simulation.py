@@ -1,4 +1,5 @@
 import numpy as np
+from numba import njit
 
 from plants.plant_creation import generate_random_seedling
 from plants.plant_rendering import PLANT_SEGMENT_DEAD, detect_occluded_squares, clear_occluded_square
@@ -115,31 +116,17 @@ def vectorized_kill_plants(world_params):
 		del world_params['plants'][index]
 
 
-def intersection(A, B):
-	nrows, ncols = A.shape
-	dtype = {
-			'names'  : ['f{}'.format(i) for i in range(ncols)],
-			'formats': ncols * [A.dtype]
-	}
-	C = np.intersect1d(A.view(dtype), B.view(dtype))
-	return C.view(A.dtype).reshape(-1, ncols)
-
-
-def array_row_intersection(a, b):
-	tmp = np.prod(np.swapaxes(a[:, :, None], 1, 2) == b, axis=2)
-	return a[np.sum(np.cumsum(tmp, axis=0) * tmp == 1, axis=1).astype(bool)]
-
-
-def photosynthesize(carbon_dioxide_map, plant_ids, plant_energies, energy_gained_from_one_carbon_dioxide_values, world_params):
-	boolean_mask_of_plant_presence = world_params['plant_location_array'] > 0
-	boolean_mask_of_carbon_presence = world_params['carbon_dioxide_map'] > 0
+# @njit
+def photosynthesize(plant_location_array, carbon_dioxide_map, alive_plant_ids, alive_plant_energy, alive_plant_energy_gained_from_one_carbon_dioxide):
+	boolean_mask_of_plant_presence = plant_location_array > 0
+	boolean_mask_of_carbon_presence = carbon_dioxide_map > 0
 
 	boolean_mask_of_both_presence = np.logical_and(boolean_mask_of_carbon_presence, boolean_mask_of_plant_presence)
 
-	world_params['carbon_dioxide_map'][boolean_mask_of_both_presence] -= 1
+	carbon_dioxide_map[boolean_mask_of_both_presence] -= 1
 
-	global_indices_of_plants_gaining_energy_this_frame = np.where(np.in1d(world_params['alive_plant_ids'], world_params['plant_location_array'][boolean_mask_of_both_presence]))[0]
+	global_indices_of_plants_gaining_energy_this_frame = np.where(np.in1d(alive_plant_ids, plant_location_array[boolean_mask_of_both_presence]))[0]
 
-	world_params['alive_plant_energy'][global_indices_of_plants_gaining_energy_this_frame] = \
-		world_params['alive_plant_energy'][global_indices_of_plants_gaining_energy_this_frame] \
-		+ world_params['alive_plant_energy_gained_from_one_carbon_dioxide'][global_indices_of_plants_gaining_energy_this_frame]
+	alive_plant_energy[global_indices_of_plants_gaining_energy_this_frame] = \
+		alive_plant_energy[global_indices_of_plants_gaining_energy_this_frame] \
+		+ alive_plant_energy_gained_from_one_carbon_dioxide[global_indices_of_plants_gaining_energy_this_frame]

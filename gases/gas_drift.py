@@ -1,5 +1,5 @@
 import numpy as np
-from numba import types
+from numba import types, jit, njit
 from numba.core.errors import TypingError
 from numba.extending import overload
 
@@ -53,7 +53,7 @@ def impl_clip(a, a_min, a_max):
 
 
 def move_gases(gas_map: np.array):
-    gas_filled_squares = np.nonzero(gas_map)
+    gas_filled_squares = accelerated_non_zero(gas_map)
     x_movement = np.random.randint(-1, 2, len(gas_filled_squares[0]))
     y_movement = np.random.randint(-1, 2, len(gas_filled_squares[1]))
 
@@ -63,6 +63,11 @@ def move_gases(gas_map: np.array):
 
     gas_map[gas_filled_squares[0], gas_filled_squares[1]] -= 1
     gas_map[random_nearby_xs, random_nearby_ys] += 1
+
+@njit
+def accelerated_non_zero(gas_map):
+    gas_filled_squares = np.nonzero(gas_map)
+    return gas_filled_squares
 
 
 def emit_gases(world, emitters):

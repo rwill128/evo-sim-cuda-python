@@ -15,17 +15,17 @@ def create_emitter(world):
 
 
 def run_sim_for_x_steps(world_dict, steps):
-    emitters = [create_emitter(world_dict) for i in range(8)]
+    emitters = [create_emitter(world_dict) for i in range(50)]
 
     for i in range(steps):
         gd.emit_gases(world_dict, emitters)
-        ps.photosynthesize(world_dict['carbon_dioxide_map'],
-                           world_dict['alive_plant_ids'],
-                           world_dict['alive_plant_energy'],
-                           world_dict['alive_plant_energy_gained_from_one_carbon_dioxide'],
-                           world_params=world_dict)
+        ps.photosynthesize(plant_location_array=world_dict['plant_location_array'],
+                           carbon_dioxide_map=world_dict['carbon_dioxide_map'],
+                           alive_plant_ids=world_dict['alive_plant_ids'],
+                           alive_plant_energy=world_dict['alive_plant_energy'],
+                           alive_plant_energy_gained_from_one_carbon_dioxide=world_dict['alive_plant_energy_gained_from_one_carbon_dioxide'])
         gd.move_gases(world_dict['carbon_dioxide_map'])
         ps.grow_plants(world_dict)
 
-        if i % 1000 == 0:
+        if i % 100 == 0:
             ar.save_drawing_of_world(world_params=world_dict, i=i)
