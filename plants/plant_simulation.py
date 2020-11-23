@@ -115,12 +115,31 @@ def vectorized_kill_plants(world_params):
 		del world_params['plants'][index]
 
 
+def intersection(A, B):
+	nrows, ncols = A.shape
+	dtype = {
+			'names'  : ['f{}'.format(i) for i in range(ncols)],
+			'formats': ncols * [A.dtype]
+	}
+	C = np.intersect1d(A.view(dtype), B.view(dtype))
+	return C.view(A.dtype).reshape(-1, ncols)
+
+
+def array_row_intersection(a, b):
+	tmp = np.prod(np.swapaxes(a[:, :, None], 1, 2) == b, axis=2)
+	return a[np.sum(np.cumsum(tmp, axis=0) * tmp == 1, axis=1).astype(bool)]
+
+
 def photosynthesize(carbon_dioxide_map, plant_ids, plant_energies, energy_gained_from_one_carbon_dioxide_values, world_params):
-	indexes_where_carbon_exists = np.nonzero(world_params['carbon_dioxide_map'])
-	indexes_where_plants_exists = np.nonzero(world_params['plant_location_array'])
-	plant_ids = world_params['plant_location_array'][indexes_where_plants_exists]
-	plants_that_will_get_carbon = world_params['plant_location_array'][indexes_where_carbon_exists]
+	boolean_mask_of_plant_presence = world_params['plant_location_array'] > 0
+	boolean_mask_of_carbon_presence = world_params['carbon_dioxide_map'] > 0
 
+	boolean_mask_of_both_presence = np.logical_and(boolean_mask_of_carbon_presence, boolean_mask_of_plant_presence)
 
+	world_params['carbon_dioxide_map'][boolean_mask_of_both_presence] -= 1
 
-	pass
+	global_indices_of_plants_gaining_energy_this_frame = np.where(np.in1d(world_params['alive_plant_ids'], world_params['plant_location_array'][boolean_mask_of_both_presence]))[0]
+
+	world_params['alive_plant_energy'][global_indices_of_plants_gaining_energy_this_frame] = \
+		world_params['alive_plant_energy'][global_indices_of_plants_gaining_energy_this_frame] \
+		+ world_params['alive_plant_energy_gained_from_one_carbon_dioxide'][global_indices_of_plants_gaining_energy_this_frame]
