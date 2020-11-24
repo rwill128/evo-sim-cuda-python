@@ -116,17 +116,27 @@ def vectorized_kill_plants(world_params):
 		del world_params['plants'][index]
 
 
-# @njit
 def photosynthesize(plant_location_array, carbon_dioxide_map, alive_plant_ids, alive_plant_energy, alive_plant_energy_gained_from_one_carbon_dioxide):
-	boolean_mask_of_plant_presence = plant_location_array > 0
-	boolean_mask_of_carbon_presence = carbon_dioxide_map > 0
-
-	boolean_mask_of_both_presence = np.logical_and(boolean_mask_of_carbon_presence, boolean_mask_of_plant_presence)
+	boolean_mask_of_both_presence = accelerated_photosynthesis_one(carbon_dioxide_map, plant_location_array)
 
 	carbon_dioxide_map[boolean_mask_of_both_presence] -= 1
 
-	global_indices_of_plants_gaining_energy_this_frame = np.where(np.in1d(alive_plant_ids, plant_location_array[boolean_mask_of_both_presence]))[0]
+	global_indices_of_plants_gaining_energy_this_frame = accelerated_where(np.in1d(alive_plant_ids, plant_location_array[boolean_mask_of_both_presence]))
 
 	alive_plant_energy[global_indices_of_plants_gaining_energy_this_frame] = \
 		alive_plant_energy[global_indices_of_plants_gaining_energy_this_frame] \
 		+ alive_plant_energy_gained_from_one_carbon_dioxide[global_indices_of_plants_gaining_energy_this_frame]
+
+
+@njit
+def accelerated_where(in1d_var):
+	frame = np.where(in1d_var)[0]
+	return frame
+
+
+@njit
+def accelerated_photosynthesis_one(carbon_dioxide_map, plant_location_array):
+	boolean_mask_of_plant_presence = plant_location_array > 0
+	boolean_mask_of_carbon_presence = carbon_dioxide_map > 0
+	boolean_mask_of_both_presence = np.logical_and(boolean_mask_of_carbon_presence, boolean_mask_of_plant_presence)
+	return boolean_mask_of_both_presence

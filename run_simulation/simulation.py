@@ -27,5 +27,5 @@ def run_sim_for_x_steps(world_dict, steps):
         gd.move_gases(world_dict['carbon_dioxide_map'])
         ps.grow_plants(world_dict)
 
-        if i % 100 == 0:
+        if i % 1000 == 0:
             ar.save_drawing_of_world(world_params=world_dict, i=i)
