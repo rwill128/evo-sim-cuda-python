@@ -6,10 +6,10 @@ def create_template(x=800, y=800) -> np.ndarray:
     return np.random.random(size=(x, y))
 
 
-def add_smoothing_to_template(l: np.ndarray):
-    # sl = signal.savgol_filter(x=l, window_length=int(len(l)/10+1), polyorder=4, axis=0)
-    # sl = signal.savgol_filter(x=sl, window_length=int(len(l)/10+1), polyorder=4, axis=-1)
-    return sl
+# def add_smoothing_to_template(l: np.ndarray):
+#     # sl = signal.savgol_filter(x=l, window_length=int(len(l)/10+1), polyorder=4, axis=0)
+#     # sl = signal.savgol_filter(x=sl, window_length=int(len(l)/10+1), polyorder=4, axis=-1)
+#     return sl
 
 
 def generate_land_and_water_from_template(l2: np.ndarray, t: float) -> (np.ndarray, np.ndarray):
