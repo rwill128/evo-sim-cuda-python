@@ -10,12 +10,12 @@ class RunSimulationTest(unittest.TestCase):
     def test_run_simulation(self):
         world_params = {'world_size': 1000, 'global_creature_id_counter': int(0)}
 
-        template = lc.create_template(world_params['world_size'], world_params['world_size'])
-        smoothed_template = lc.add_smoothing_to_template(template)
-        land, water = lc.generate_land_and_water_from_template(smoothed_template, 0.4)
+        # template = lc.create_template(world_params['world_size'], world_params['world_size'])
+        # smoothed_template = lc.add_smoothing_to_template(template)
+        # land, water = lc.generate_land_and_water_from_template(smoothed_template, 0.4)
 
-        world_params['land_array'] = land
-        world_params['water_array'] = water
+        # world_params['land_array'] = land
+        # world_params['water_array'] = water
         world_params['plant_surface_area_history'] = {'time': [], 'plant_surface_area_history': []}
         world_params['carbon_dioxide_amount_history'] = {'time': [], 'carbon_dioxide_amount_history': []}
         world_params['population'] = {'time': [], 'population': []}
@@ -29,7 +29,7 @@ class RunSimulationTest(unittest.TestCase):
 
         pc.spawn_new_plants(world_params=world_params, num_plants=10000)
 
-        rs.run_sim_for_x_steps(world_dict=world_params, steps=2000)
+        rs.run_sim_for_x_steps(world_dict=world_params, steps=5000)
 
         pass
 
