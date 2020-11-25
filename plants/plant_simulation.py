@@ -1,10 +1,10 @@
 import numpy as np
-from numba import njit
+from numba import njit, jit
 
 from plants.plant_creation import generate_random_seedling
 from plants.plant_rendering import PLANT_SEGMENT_DEAD, detect_occluded_squares, clear_occluded_square
 
-
+# @jit(cache=True)
 def grow_plants(world_params):
 	vectorized_grow_plants(world_params)
 	vectorized_kill_plants(world_params)
@@ -32,14 +32,18 @@ def grow_plants(world_params):
 		world_params['plants'][index]['segments'] = np.append(world_params['plants'][index]['segments'], [new_segment], 0)
 
 
+# @jit(cache=True)
 def add_babies(index, world_params):
 	seedling, seedling_id = generate_random_seedling(world_params, (world_params['x_translation'][index], world_params['y_translation'][index]), index)
 	world_params['all_plants_dictionary'][seedling_id] = seedling
 	world_params['plants'].append(seedling)
 
 
+# @jit(cache=True)
 def add_new_growth(index, new_growth, plant, world_params):
-	if world_params['alive_plant_energy'][index] > world_params['energy_floor_for_growth'][index] and world_params['alive_plant_ages'][index] < world_params['alive_plant_fertile_ages'][index]:
+	if world_params['alive_plant_energy'][index] > world_params['energy_floor_for_growth'][index] \
+			and world_params['alive_plant_ages'][index] < world_params['alive_plant_fertile_ages'][index]\
+			and world_params['num_alive_segments'][index] > 1:
 		world_params['alive_plant_energy'][index] -= world_params['energy_cost_for_growth'][index]
 		joined_seg = plant['segments'][np.random.randint(0, world_params['num_alive_segments'][index])]  # TODO: Should only grow off of live segments
 		new_seg = [
@@ -48,27 +52,24 @@ def add_new_growth(index, new_growth, plant, world_params):
 				joined_seg[4],
 				joined_seg[3] + np.random.choice([-1, 0, 1]),
 				joined_seg[4] + np.random.choice([-1, 0, 1])]
-		detect_occluded_squares(l=joined_seg[1:],
+		detect_occluded_squares(joined_seg[1], joined_seg[2], joined_seg[3], joined_seg[4],
 								x_translation=world_params['x_translation'][index],
 								y_translation=world_params['y_translation'][index],
 								c_id=world_params['alive_plant_ids'][index],
-								plant_location_array=world_params['plant_location_array'],
-								world_params=world_params)
+								plant_location_array=world_params['plant_location_array'],)
 		new_growth.append((index, new_seg))
 
-
+# @jit(cache=True)
 def kill_segments(index, world_params):
 	plant = world_params['plants'][index]
 	if world_params['alive_plant_energy'][index] <= 0:
 		if world_params['num_alive_segments'][index] == 1:
 			# Mark only segment dead
 			only_segment = plant['segments'][0]
-			clear_occluded_square(l=only_segment[1:],
+			clear_occluded_square(only_segment[1], only_segment[2], only_segment[3], only_segment[4],
 								  x_translation=world_params['x_translation'][index],
 								  y_translation=world_params['y_translation'][index],
-								  c_id=world_params['alive_plant_ids'][index],
-								  plant_location_array=world_params['plant_location_array'],
-								  world_params=world_params)
+								  plant_location_array=world_params['plant_location_array'])
 			only_segment[0] = PLANT_SEGMENT_DEAD
 			plant['segments'] = np.delete(plant['segments'], 0, 0)
 			plant['dead_segments'].append(only_segment)
@@ -88,12 +89,12 @@ def kill_segments(index, world_params):
 			plant['dead_segments'].append(segment_to_kill)
 			world_params['num_alive_segments'][index] -= 1
 
-
+# @njit(cache=True)
 def vectorized_grow_plants(world_params):
 	world_params['alive_plant_ages'] += 1
 	world_params['alive_plant_energy'] = world_params['alive_plant_energy'] - (world_params['num_alive_segments'] * world_params['energy_cost_per_frame'])
 
-
+# @jit(cache=True)
 def vectorized_kill_plants(world_params):
 	no_energy = np.where(world_params['alive_plant_energy'] <= 0)
 	no_segments = np.where(world_params['num_alive_segments'] <= 0)
@@ -115,7 +116,7 @@ def vectorized_kill_plants(world_params):
 	for index in dead_indexes[::-1]:
 		del world_params['plants'][index]
 
-
+# @jit(cache=True)
 def photosynthesize(plant_location_array, carbon_dioxide_map, alive_plant_ids, alive_plant_energy, alive_plant_energy_gained_from_one_carbon_dioxide):
 	boolean_mask_of_both_presence = accelerated_photosynthesis_one(carbon_dioxide_map, plant_location_array)
 
@@ -127,16 +128,11 @@ def photosynthesize(plant_location_array, carbon_dioxide_map, alive_plant_ids, a
 		alive_plant_energy[global_indices_of_plants_gaining_energy_this_frame] \
 		+ alive_plant_energy_gained_from_one_carbon_dioxide[global_indices_of_plants_gaining_energy_this_frame]
 
-
-@njit
+# @jit(cache=True)
 def accelerated_where(in1d_var):
 	frame = np.where(in1d_var)[0]
 	return frame
 
-
-@njit
+@jit(cache=True)
 def accelerated_photosynthesis_one(carbon_dioxide_map, plant_location_array):
-	boolean_mask_of_plant_presence = plant_location_array > 0
-	boolean_mask_of_carbon_presence = carbon_dioxide_map > 0
-	boolean_mask_of_both_presence = np.logical_and(boolean_mask_of_carbon_presence, boolean_mask_of_plant_presence)
-	return boolean_mask_of_both_presence
+	return np.logical_and(plant_location_array, carbon_dioxide_map)

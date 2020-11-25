@@ -1,10 +1,12 @@
 import numpy as np
+from numba import jit
 
 from plants.plant_rendering import detect_occluded_squares
 
 ALIVE_SEGMENT = 1
 
 
+# @jit(cache=True)
 def generate_random_seedling(world_params, vicinity: (int, int) = None, parent_index: int = None):
 	max_x_or_y = world_params['world_size'] - 5
 	min_x_or_y: int = 5
@@ -56,12 +58,11 @@ def generate_random_seedling(world_params, vicinity: (int, int) = None, parent_i
 
 	plant_id = int(world_params['global_creature_id_counter'])
 	first_segment = [ALIVE_SEGMENT, 0, 0, np.random.choice([-1, 0, 1]), np.random.choice([-1, 0, 1])]
-	detect_occluded_squares(l=first_segment[1:],
+	detect_occluded_squares(first_segment[1], first_segment[2], first_segment[3], first_segment[4],
 							x_translation=x_translation,
 							y_translation=y_translation,
 							c_id=plant_id,
-							plant_location_array=world_params['plant_location_array'],
-							world_params=world_params)
+							plant_location_array=world_params['plant_location_array'])
 
 	creature = {
 			'segments'     : np.array([first_segment]),
@@ -91,7 +92,7 @@ def generate_random_seedling(world_params, vicinity: (int, int) = None, parent_i
 
 	return creature, plant_id
 
-
+# @jit(cache=True)
 def spawn_new_plants(world_params, num_plants: int = 1):
 	world_params['all_plants_dictionary'] = {}
 	world_params['plants'] = []

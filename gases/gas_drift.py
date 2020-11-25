@@ -1,5 +1,5 @@
 import numpy as np
-from numba import types, njit
+from numba import types, njit, jit
 from numba.core.errors import TypingError
 from numba.extending import overload
 
@@ -13,7 +13,7 @@ def impl_clip(a, a_min, a_max):
 		raise TypingError("a_max must be a_min scalar int/float")
 	if isinstance(a_min, types.NoneType) and isinstance(a_max, types.NoneType):
 		raise TypingError("a_min and a_max can't both be None")
-
+	
 	if isinstance(a, (types.Integer, types.Float)):
 		# `a` is a scalar with a valid type
 		if isinstance(a_min, types.NoneType):
@@ -46,19 +46,20 @@ def impl_clip(a, a_min, a_max):
 			return out
 	else:
 		raise TypingError("`a` must be an int/float or a 1D array of ints/floats")
-
+	
 	# The call to `np.clip` has arguments with valid types, return our
 	# numba-compatible implementation
 	return impl
 
 
+# @jit(cache=True)
 def move_gases(gas_map: np.array):
 	gas_filled_squares, xs, ys = accelerated_gas_code(gas_map)
 	gas_map[gas_filled_squares[0], gas_filled_squares[1]] -= 1
 	gas_map[xs, ys] += 1
 
 
-@njit
+@njit(cache=True)
 def accelerated_gas_code(gas_map):
 	gas_filled_squares = np.nonzero(gas_map)
 	x_movement = np.random.randint(-1, 2, len(gas_filled_squares[0]))
@@ -68,25 +69,26 @@ def accelerated_gas_code(gas_map):
 	return gas_filled_squares, xs, ys
 
 
+# @jit(cache=True)
 def emit_gases(world, emitters):
 	for emitter in emitters:
 		world['carbon_dioxide_map'][emitter['x']][emitter['y']] += 1
-
+		
 		# TODO: Every 100 frames or so randomly decide whether to flip velocities
 		# Crappy hack job POC below
 		if world['global_creature_id_counter'] % 100 == 0:
 			emitter['x'] = np.random.randint(5, world['world_size'] - 5)
 			emitter['y'] = np.random.randint(5, world['world_size'] - 5)
-
+		
 		if emitter['x'] < 5 and emitter['vx'] < 0:
 			emitter['vx'] = -emitter['vx']
 		if emitter['y'] < 5 and emitter['vy'] < 0:
 			emitter['vy'] = -emitter['vy']
-
+		
 		if emitter['x'] > world['world_size'] - 5 and emitter['vx'] > 0:
 			emitter['vx'] = -emitter['vx']
 		if emitter['y'] > world['world_size'] - 5 and emitter['vy'] > 0:
 			emitter['vy'] = -emitter['vy']
-
+		
 		emitter['x'] += emitter['vx']
 		emitter['y'] += emitter['vy']
