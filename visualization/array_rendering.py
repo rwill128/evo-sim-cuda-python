@@ -1,7 +1,6 @@
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 import numpy as np
-import seaborn as sns
 
 
 # TODO: Add rendering caller to pass in a color and a world, with a key to use for the intensity such as age.
@@ -35,19 +34,19 @@ def display_world(world_params):
 
 
 def save_drawing_of_world(world_params, i):
-    fig, axs = plt.subplots(2, 2)
+    fig, axs = plt.subplots(2, 1)
 
-    axs[0, 0].title.set_text('Plant Locations')
-    axs[0, 0].imshow(world_params['plant_location_array'], interpolation='nearest', cmap=cm.Greens)
+    axs[0].title.set_text('Plant Locations')
+    axs[0].imshow(world_params['plant_location_array'], interpolation='nearest', cmap=cm.Greens)
 
-    axs[1, 0].title.set_text("Carbon Dioxide")
-    axs[1, 0].imshow(world_params['carbon_dioxide_map'], interpolation='nearest', cmap=cm.Greys)
+    axs[1].title.set_text("Carbon Dioxide")
+    axs[1].imshow(world_params['carbon_dioxide_map'], interpolation='nearest', cmap=cm.Greys)
 
-    axs[0, 1].title.set_text("Land")
-    axs[0, 1].imshow(world_params['land_array'], interpolation='nearest', cmap=cm.Oranges)
-
-    axs[1, 1].title.set_text("Water")
-    axs[1, 1].imshow(world_params['water_array'], interpolation='nearest', cmap=cm.Blues)
+    # axs[0, 1].title.set_text("Land")
+    # axs[0, 1].imshow(world_params['land_array'], interpolation='nearest', cmap=cm.Oranges)
+    #
+    # axs[1, 1].title.set_text("Water")
+    # axs[1, 1].imshow(world_params['water_array'], interpolation='nearest', cmap=cm.Blues)
 
     # ages = [p['age'] for p in world_params['plants']]
     #

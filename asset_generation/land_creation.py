@@ -1,5 +1,5 @@
 import numpy as np
-import scipy.signal as signal
+# import scipy.signal as signal
 
 
 def create_template(x=800, y=800) -> np.ndarray:
@@ -7,8 +7,8 @@ def create_template(x=800, y=800) -> np.ndarray:
 
 
 def add_smoothing_to_template(l: np.ndarray):
-    sl = signal.savgol_filter(x=l, window_length=int(len(l)/10+1), polyorder=4, axis=0)
-    sl = signal.savgol_filter(x=sl, window_length=int(len(l)/10+1), polyorder=4, axis=-1)
+    # sl = signal.savgol_filter(x=l, window_length=int(len(l)/10+1), polyorder=4, axis=0)
+    # sl = signal.savgol_filter(x=sl, window_length=int(len(l)/10+1), polyorder=4, axis=-1)
     return sl
 
 
