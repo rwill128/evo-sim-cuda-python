@@ -42,23 +42,9 @@ def save_drawing_of_world(world_params, i):
     axs[1].title.set_text("Carbon Dioxide")
     axs[1].imshow(world_params['carbon_dioxide_map'], interpolation='nearest', cmap=cm.Greys)
 
-    # axs[0, 1].title.set_text("Land")
-    # axs[0, 1].imshow(world_params['land_array'], interpolation='nearest', cmap=cm.Oranges)
-    #
-    # axs[1, 1].title.set_text("Water")
-    # axs[1, 1].imshow(world_params['water_array'], interpolation='nearest', cmap=cm.Blues)
-
-    # ages = [p['age'] for p in world_params['plants']]
-    #
-    # axs[2, 0].hist(ages, bins=10)
-    #
-    # sizes = [p['num_alive_segments'] for p in world_params['plants']]
-    #
-    # axs[2, 1].hist(sizes, bins=10)
-
     fig.set_size_inches(10, 10)
     fig.tight_layout()
 
-    # fig.savefig('/tmp/build-artifacts/world-results' + '-' + str(i) + '.png', dpi=100)
+    fig.savefig('C:/evo-sim-records/sim-state' + '-' + str(i) + '.png', dpi=100)
     plt.show()
     plt.close(fig)
