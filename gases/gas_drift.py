@@ -2,7 +2,7 @@ import numpy as np
 from numba import types, njit, jit
 from numba.core.errors import TypingError
 from numba.extending import overload
-
+from numba.cuda import jit
 
 @overload(np.clip)
 def impl_clip(a, a_min, a_max):
