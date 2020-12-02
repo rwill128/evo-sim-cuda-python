@@ -24,7 +24,7 @@ class RunSimulationTest(unittest.TestCase):
                                                          fill_value=0)
             pc.spawn_new_plants(world_params=world_params, num_plants=5000)
 
-        rs.run_sim_for_x_steps(world_params=world_params, steps=5000)
+        rs.run_sim_for_x_steps(world_params=world_params, steps=10000)
 
     def test_load_world_and_analyze(self):
 

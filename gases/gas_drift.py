@@ -52,14 +52,14 @@ def impl_clip(a, a_min, a_max):
 	return impl
 
 
-# @jit(cache=True)
+# @jit()
 def move_gases(gas_map: np.array):
 	gas_filled_squares, xs, ys = accelerated_gas_code(gas_map)
 	gas_map[gas_filled_squares[0], gas_filled_squares[1]] -= 1
 	gas_map[xs, ys] += 1
 
 
-@njit(cache=True)
+@njit()
 def accelerated_gas_code(gas_map):
 	gas_filled_squares = np.nonzero(gas_map)
 	x_movement = np.random.randint(-1, 2, len(gas_filled_squares[0]))
@@ -69,7 +69,7 @@ def accelerated_gas_code(gas_map):
 	return gas_filled_squares, xs, ys
 
 
-# @jit(cache=True)
+# @jit()
 def emit_gases(world, emitters):
 	for emitter in emitters:
 		world['carbon_dioxide_map'][emitter['x']][emitter['y']] += 1

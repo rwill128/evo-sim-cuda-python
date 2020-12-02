@@ -6,7 +6,7 @@ from plants.plant_rendering import detect_occluded_squares
 ALIVE_SEGMENT = 1
 
 
-# @jit(cache=True)
+# @jit()
 def generate_random_seedling(world_params, vicinity: (int, int) = None, parent_index: int = None):
 	max_x_or_y = world_params['world_size'] - 5
 	min_x_or_y: int = 5
@@ -66,7 +66,6 @@ def generate_random_seedling(world_params, vicinity: (int, int) = None, parent_i
 
 	creature = {
 			'segments'     : np.array([first_segment]),
-			'dead_segments': [],
 			# 'lineage'      : lineage,
 	}
 
@@ -92,9 +91,8 @@ def generate_random_seedling(world_params, vicinity: (int, int) = None, parent_i
 
 	return creature, plant_id
 
-# @jit(cache=True)
+# @jit()
 def spawn_new_plants(world_params, num_plants: int = 1):
-	# world_params['all_plants_dictionary'] = {}
 	world_params['plants'] = []
 
 	world_params['plant_ids'] = np.array([], dtype=int)
@@ -114,5 +112,4 @@ def spawn_new_plants(world_params, num_plants: int = 1):
 
 	for i in range(num_plants):
 		plant, creature_id = generate_random_seedling(world_params)
-		# world_params['all_plants_dictionary'][creature_id] = plant
 		world_params['plants'].append(plant)
